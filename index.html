@@ -6,7 +6,7 @@
     <title>Buffet Explosão Sabores | Cardápio Digital & Gestão</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts: Inter e Playfair Display -->
+    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -54,19 +54,19 @@
     <header class="bg-black/90 border-b border-brand-gold/30 text-xs py-2.5 px-4 sticky top-0 z-50 backdrop-blur-md">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3 text-gray-300">
-                <span class="inline-flex items-center text-brand-amber font-semibold">
+                <a href="https://wa.me/5521971876482" target="_blank" class="inline-flex items-center text-brand-amber font-semibold hover:underline">
                     <i class="fa-brands fa-whatsapp text-green-400 mr-1.5 text-sm"></i>
                     <span id="header-phone-display">(21) 97187-6482</span>
-                </span>
+                </a>
                 <span class="hidden md:inline text-gray-500">|</span>
                 <span class="hidden md:inline text-gray-400"><i class="fa-brands fa-instagram text-pink-400 mr-1"></i> <span id="header-insta-display">@BUFFET_EXPLOSÃO_DE_SABORES</span></span>
             </div>
             
             <div class="flex items-center space-x-3">
-                <button onclick="scrollToCalculator()" class="text-xs bg-brand-amber/10 hover:bg-brand-amber/20 text-brand-amber border border-brand-amber/40 px-3 py-1 rounded-full transition-all">
+                <button onclick="scrollToCalculator()" class="text-xs bg-brand-amber/10 hover:bg-brand-amber/20 text-brand-amber border border-brand-amber/40 px-3 py-1 rounded-full transition-all cursor-pointer">
                     <i class="fa-solid fa-calculator mr-1"></i> Simular Evento
                 </button>
-                <button onclick="toggleAdminModal()" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-600 px-3 py-1 rounded-full flex items-center transition-all">
+                <button onclick="toggleAdminModal()" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-600 px-3 py-1 rounded-full flex items-center transition-all cursor-pointer">
                     <i class="fa-solid fa-lock mr-1.5 text-brand-gold"></i> 
                     <span>Painel Admin</span>
                 </button>
@@ -89,10 +89,10 @@
 
             <!-- NAVIGATION TABS -->
             <div class="flex justify-center space-x-2 sm:space-x-4 max-w-md mx-auto bg-gray-900/90 p-1.5 rounded-2xl border border-gray-800 shadow-xl">
-                <button id="tab-churrasco" onclick="switchTab('churrasco')" class="flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-200 bg-brand-gold text-black font-semibold shadow-lg">
+                <button id="tab-churrasco" onclick="switchTab('churrasco')" class="flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-200 bg-brand-gold text-black font-semibold shadow-lg cursor-pointer">
                     <i class="fa-solid fa-fire mr-1.5"></i> Buffet de Churrasco
                 </button>
-                <button id="tab-coffeebreak" onclick="switchTab('coffeebreak')" class="flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-200 text-gray-400 hover:text-white">
+                <button id="tab-coffeebreak" onclick="switchTab('coffeebreak')" class="flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-200 text-gray-400 hover:text-white cursor-pointer">
                     <i class="fa-solid fa-mug-hot mr-1.5"></i> Coffee Break
                 </button>
             </div>
@@ -126,7 +126,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button onclick="openBookingWhatsApp('Buffet de Churrasco - Sem Bebidas', getPrice('priceChurrascoSemBebida'))" class="w-full py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold transition-colors flex items-center justify-center space-x-2">
+                        <button onclick="openBookingWhatsApp('Buffet de Churrasco - Sem Bebidas', getPrice('priceChurrascoSemBebida'))" class="w-full py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold transition-colors flex items-center justify-center space-x-2 cursor-pointer">
                             <i class="fa-brands fa-whatsapp text-green-400 text-base"></i>
                             <span>Solicitar Reserva</span>
                         </button>
@@ -150,7 +150,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button onclick="openBookingWhatsApp('Buffet de Churrasco - Com Bebidas Não Alcoólicas', getPrice('priceChurrascoComBebida'))" class="w-full py-3 bg-brand-amber hover:bg-yellow-500 text-black rounded-xl text-sm font-bold transition-colors flex items-center justify-center space-x-2">
+                        <button onclick="openBookingWhatsApp('Buffet de Churrasco - Com Bebidas Não Alcoólicas', getPrice('priceChurrascoComBebida'))" class="w-full py-3 bg-brand-amber hover:bg-yellow-500 text-black rounded-xl text-sm font-bold transition-colors flex items-center justify-center space-x-2 cursor-pointer">
                             <i class="fa-brands fa-whatsapp text-black text-base"></i>
                             <span>Solicitar Reserva</span>
                         </button>
@@ -171,7 +171,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button onclick="openBookingWhatsApp('Buffet de Churrasco - Completo com Cerveja e Drinks', getPrice('priceChurrascoComCerveja'))" class="w-full py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold transition-colors flex items-center justify-center space-x-2">
+                        <button onclick="openBookingWhatsApp('Buffet de Churrasco - Completo com Cerveja e Drinks', getPrice('priceChurrascoComCerveja'))" class="w-full py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold transition-colors flex items-center justify-center space-x-2 cursor-pointer">
                             <i class="fa-brands fa-whatsapp text-green-400 text-base"></i>
                             <span>Solicitar Reserva</span>
                         </button>
@@ -203,7 +203,7 @@
                         <span class="text-lg font-bold text-brand-amber mr-1">R$</span>
                         <span class="text-5xl font-extrabold text-white price-field" data-key="priceCoffeeBreak">65,00</span>
                     </div>
-                    <button onclick="openBookingWhatsApp('Coffee Break Corporativo', getPrice('priceCoffeeBreak'))" class="w-full py-3 bg-brand-amber hover:bg-yellow-500 text-black font-bold rounded-xl text-sm transition-all mt-2">
+                    <button onclick="openBookingWhatsApp('Coffee Break Corporativo', getPrice('priceCoffeeBreak'))" class="w-full py-3 bg-brand-amber hover:bg-yellow-500 text-black font-bold rounded-xl text-sm transition-all mt-2 cursor-pointer">
                         <i class="fa-brands fa-whatsapp mr-2"></i>Reservar Data
                     </button>
                 </div>
@@ -247,7 +247,7 @@
                             <span id="calc-total" class="text-3xl sm:text-4xl font-extrabold text-white">4.900,00</span>
                         </div>
                     </div>
-                    <button onclick="sendCalculatedWhatsApp()" class="w-full sm:w-auto py-3.5 px-6 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl text-sm transition-all shadow-lg flex items-center justify-center space-x-2">
+                    <button onclick="sendCalculatedWhatsApp()" class="w-full sm:w-auto py-3.5 px-6 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl text-sm transition-all shadow-lg flex items-center justify-center space-x-2 cursor-pointer">
                         <i class="fa-brands fa-whatsapp text-lg"></i>
                         <span>Enviar Orçamento no WhatsApp</span>
                     </button>
@@ -265,7 +265,7 @@
                 <p class="text-gray-500">Buffet Completo & Eventos Corporativos.</p>
             </div>
             <div class="flex items-center space-x-4">
-                <span id="footer-phone-display">(21) 97187-6482</span>
+                <a href="https://wa.me/5521971876482" target="_blank" class="hover:text-amber-400"><span id="footer-phone-display">(21) 97187-6482</span></a>
                 <span>|</span>
                 <span id="footer-insta-display">@BUFFET_EXPLOSÃO_DE_SABORES</span>
             </div>
@@ -281,8 +281,8 @@
                 <h3 class="text-xl font-bold text-amber-400 mb-4"><i class="fa-solid fa-lock mr-2"></i>Acesso Administrativo</h3>
                 <input type="password" id="admin-pass" placeholder="Digite a senha (padrão: 1234)" class="w-full p-3 rounded bg-gray-900 border border-gray-700 text-white mb-4 text-sm">
                 <div class="flex justify-end space-x-2">
-                    <button onclick="toggleAdminModal()" class="px-4 py-2 bg-gray-800 text-gray-300 rounded text-xs">Cancelar</button>
-                    <button onclick="verifyAdmin()" class="px-4 py-2 bg-amber-500 text-black font-bold rounded text-xs">Entrar</button>
+                    <button onclick="toggleAdminModal()" class="px-4 py-2 bg-gray-800 text-gray-300 rounded text-xs cursor-pointer">Cancelar</button>
+                    <button onclick="verifyAdmin()" class="px-4 py-2 bg-amber-500 text-black font-bold rounded text-xs cursor-pointer">Entrar</button>
                 </div>
             </div>
 
@@ -290,13 +290,13 @@
             <div id="admin-dashboard" class="hidden space-y-6">
                 <div class="flex justify-between items-center border-b border-gray-800 pb-3">
                     <h3 class="text-xl font-bold text-amber-400"><i class="fa-solid fa-gauge-high mr-2"></i>Dashboard Administrativo</h3>
-                    <button onclick="toggleAdminModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                    <button onclick="toggleAdminModal()" class="text-gray-400 hover:text-white cursor-pointer"><i class="fa-solid fa-xmark text-xl"></i></button>
                 </div>
 
                 <!-- Abas do Dashboard -->
                 <div class="flex border-b border-gray-800 space-x-4">
-                    <button onclick="switchAdminTab('contract')" id="adm-tab-contract" class="pb-2 font-bold border-b-2 border-amber-500 text-amber-400 text-sm"><i class="fa-solid fa-file-contract mr-1"></i> Gerar Contrato</button>
-                    <button onclick="switchAdminTab('media')" id="adm-tab-media" class="pb-2 font-bold text-gray-400 hover:text-amber-400 text-sm"><i class="fa-solid fa-photo-film mr-1"></i> Fotos & Vídeos</button>
+                    <button onclick="switchAdminTab('contract')" id="adm-tab-contract" class="pb-2 font-bold border-b-2 border-amber-500 text-amber-400 text-sm cursor-pointer"><i class="fa-solid fa-file-contract mr-1"></i> Gerar Contrato</button>
+                    <button onclick="switchAdminTab('media')" id="adm-tab-media" class="pb-2 font-bold text-gray-400 hover:text-amber-400 text-sm cursor-pointer"><i class="fa-solid fa-photo-film mr-1"></i> Fotos & Vídeos</button>
                 </div>
 
                 <!-- Aba 1: Gerar Contrato -->
@@ -335,7 +335,7 @@
                             <input type="text" id="c-address" placeholder="Ex: Rua Soldado Eugênio da Silva, 19, Taquara" class="w-full p-2 bg-brand-charcoal border border-gray-700 rounded text-white text-sm">
                         </div>
 
-                        <button onclick="generateOfficialPDF()" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded-xl transition flex items-center justify-center text-sm shadow-lg">
+                        <button onclick="generateOfficialPDF()" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded-xl transition flex items-center justify-center text-sm shadow-lg cursor-pointer">
                             <i class="fa-solid fa-file-pdf mr-2 text-base"></i>Gerar Contrato Oficial em PDF (com Assinaturas)
                         </button>
                     </div>
@@ -356,7 +356,7 @@
                             <input type="text" id="media-img2" class="w-full p-2 bg-brand-charcoal border border-gray-700 rounded text-white text-sm" value="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80">
                         </div>
 
-                        <button onclick="alert('Mídias atualizadas com sucesso!')" class="w-full py-2.5 bg-brand-gold text-black font-bold rounded-xl text-xs">Guardar Alterações</button>
+                        <button onclick="alert('Mídias atualizadas com sucesso!')" class="w-full py-2.5 bg-brand-gold text-black font-bold rounded-xl text-xs cursor-pointer">Guardar Alterações</button>
                     </div>
                 </div>
 
@@ -365,3 +365,125 @@
     </div>
 
     <!-- TEMPLATE OCULTO PARA GERAR O PDF DO CONTRATO OFICIAL -->
+    <div class="hidden">
+        <div id="pdf-template" style="padding: 25px; font-family: Arial, sans-serif; color: #000; background: #fff; font-size: 11px; line-height: 1.4;">
+            <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px;">
+                <h2 style="font-size: 14px; font-weight: bold; margin: 0;">EXPLOSÃO SABORES BUFFET</h2>
+                <h3 style="font-size: 12px; margin: 5px 0; text-decoration: underline;">CONTRATO DE PRESTAÇÃO DE SERVIÇOS</h3>
+            </div>
+
+            <p style="text-align: justify; margin-bottom: 8px;">
+                Por este instrumento particular, de um lado como <strong>CONTRATANTE</strong> o(a) senhor(a) <span id="out-name" style="font-weight: bold;">____________________</span>, portador(a) do CPF <span id="out-doc" style="font-weight: bold;">____________________</span> e residente em <span id="out-address" style="font-weight: bold;">____________________</span>.
+            </p>
+            
+            <p style="text-align: justify; margin-bottom: 8px;">
+                De outro lado como <strong>CONTRATADO</strong> <strong>EXPLOSÃO SABORES BUFFET</strong>, com sede na cidade de Rio de Janeiro, inscrita no CNPJ sob o nº 69.594.849/0001-37, ora representada por seu sócio Marlon José Vicente Gonçalves, têm entre si justo e contratado a prestação de serviços de buffet, mediante as condições a seguir:
+            </p>
+
+            <p style="font-weight: bold; margin-top: 10px; margin-bottom: 3px;">CLÁUSULA 1ª</p>
+            <p style="text-align: justify; margin-bottom: 8px;">
+                O CONTRATADO se compromete a prestar os serviços de buffet em uma festa a ser realizada no dia <span id="out-date" style="font-weight: bold;">08/11/2026 às 13:00</span>, no endereço residencial do contratante com duração de 5 (cinco) horas.
+            </p>
+
+            <p style="font-weight: bold; margin-top: 10px; margin-bottom: 3px;">CLÁUSULA 2ª</p>
+            <p style="text-align: justify; margin-bottom: 4px;">
+                <strong>2.1.</strong> Pela prestação dos serviços de buffet objeto deste instrumento, o CONTRATANTE pagará ao CONTRATADO o valor total e fechado de R$ <span id="out-val" style="font-weight: bold;">3.344,00</span>.
+            </p>
+            <p style="text-align: justify; margin-bottom: 4px;">
+                <strong>Valor e Condições de Pagamento:</strong> Sinal / Reserva de data (50%): depositado antecipadamente. Saldo remanescente (50%): a ser quitado em até 24 horas após a realização do evento.
+            </p>
+            <p style="text-align: justify; margin-bottom: 8px;">
+                <strong>2.2.</strong> O valor estipulado baseia-se na capacidade de atendimento para até <span id="out-guests" style="font-weight: bold;">35</span> pessoas[cite: 5]. Com a assinatura deste contrato, o CONTRATANTE manifesta expressa concordância com os valores e condições comerciais[cite: 5].
+            </p>
+
+            <p style="font-weight: bold; margin-top: 10px; margin-bottom: 3px;">CLÁUSULA 3ª a 6ª</p>
+            <p style="text-align: justify; margin-bottom: 8px;">
+                <strong>3ª:</strong> Atraso no pagamento integral após 24h do evento incorre em multa de 10%[cite: 6].<br>
+                <strong>4ª & 5ª:</strong> Execução com higiene, louças e materiais fornecidos pelo CONTRATADO[cite: 6].<br>
+                <strong>6ª:</strong> Bebidas alcoólicas: buffet não se responsabiliza pelo fornecimento[cite: 7].
+            </p>
+
+            <p style="font-weight: bold; margin-top: 10px; margin-bottom: 3px;">CLÁUSULA 7ª a 10ª</p>
+            <p style="text-align: justify; margin-bottom: 8px;">
+                <strong>7ª:</strong> Cancelamento em até 24h implica retenção do sinal e multa de 10%[cite: 6].<br>
+                <strong>8ª & 9ª:</strong> Sobras de alimentos ficam com o buffet; contrato intransferível[cite: 6].<br>
+                <strong>10ª:</strong> Responsabilidade por danos ou quebras de louças e equipamentos (taxa mín. R$ 5,00 por item)[cite: 6].
+            </p>
+
+            <p style="font-weight: bold; margin-top: 10px; margin-bottom: 3px;">CLÁUSULA 11ª - DIREITO DE USO DE IMAGEM</p>
+            <p style="text-align: justify; margin-bottom: 12px;">
+                O CONTRATANTE autoriza o uso de imagens/registros em vídeo feitos no evento exclusivamente para divulgação nas redes sociais e site do CONTRATADO, a título gratuito[cite: 7].
+            </p>
+
+            <div style="margin-top: 25px; text-align: center;">
+                <p>Rio de Janeiro, 22 de Outubro de 2026[cite: 7].</p>
+                <br>
+                <div style="display: flex; justify-content: space-between; margin-top: 15px;">
+                    <div style="width: 45%; border-top: 1px solid #000; padding-top: 5px; font-size: 10px; text-align: center;">
+                        <strong>CONTRATANTE (Assinatura Digital):</strong><br>
+                        <span id="out-sign" style="font-family: 'Brush Script MT', cursive; font-size: 15px; font-weight: bold;">____________________</span><br>
+                        <span id="out-sign-name">____________________</span>
+                    </div>
+                    <div style="width: 45%; border-top: 1px solid #000; padding-top: 5px; font-size: 10px; text-align: center;">
+                        <strong>CONTRATADO:</strong><br>
+                        <span style="font-family: 'Brush Script MT', cursive; font-size: 15px; font-weight: bold;">Marlon José Vicente Gonçalves</span><br>
+                        EXPLOSÃO SABORES BUFFET<br>
+                        Conta: 0002818-5 | Agência: 1669-1[cite: 7]
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        const DEFAULT_DATA = {
+            prices: { priceChurrascoSemBebida: "88,00", priceChurrascoComBebida: "98,00", priceChurrascoComCerveja: "140,00", priceCoffeeBreak: "65,00" },
+            churrascoCategories: [
+                { id: "entradas", title: "Entradas & Especialidades", icon: "fa-concierge-bell", items: ["Salgadinhos fritos variados", "Caldo de feijão especial", "Pão de alho crocante", "Pão de linguiça artesanal"] },
+                { id: "proteinas", title: "Proteínas & Carnes", icon: "fa-drumstick-bite", items: ["Alcatra nobre", "Picanha selecionada", "Maminha macia", "Fraldinha grelhada", "Contrafilé", "Costela gaúcha", "Costelinha suína ao barbecue", "Coração de frango", "Linguiça tradicional", "Queijo coalho grelhado"] },
+                { id: "guarnicoes", title: "Guarnições & Acompanhamentos", icon: "fa-bowl-rice", items: ["Arroz branco soltinho", "Feijão tropeiro tradicional", "Farofa da casa crocante", "Salpicão de frango", "Macarronese cremosa", "Vinagrete especial", "Batata frita crocante"] }
+            ],
+            coffeeBreakCategories: [
+                { id: "paes", title: "Pães & Salgados", icon: "fa-bread-slice", items: ["Pão a metro recheado", "Sanduíches artesanais", "Salgados assados de forno", "Pão de queijo quentinho"] },
+                { id: "frios", title: "Frios & Acompanhamentos", icon: "fa-cheese", items: ["Tábua de frios selecionados", "Manteiga e geleias"] },
+                { id: "doces", title: "Doces & Frutas", icon: "fa-apple-whole", items: ["Bolos caseiros", "Salada de frutas frescas"] }
+            ]
+        };
+
+        function renderChurrasco() {
+            const container = document.getElementById('churrasco-categories-container');
+            container.innerHTML = DEFAULT_DATA.churrascoCategories.map(cat => `
+                <div class="bg-brand-darkPaper border border-gray-800 rounded-2xl p-6 shadow-md">
+                    <div class="flex items-center space-x-3 mb-4 pb-3 border-b border-gray-800">
+                        <div class="p-2.5 bg-gray-900 rounded-xl text-brand-amber"><i class="fa-solid ${cat.icon} text-lg"></i></div>
+                        <h4 class="font-serif text-lg font-bold text-white">${cat.title}</h4>
+                    </div>
+                    <ul class="space-y-1">
+                        ${cat.items.map(item => `<li class="text-sm text-gray-300 py-1"><i class="fa-solid fa-check text-brand-amber text-xs mr-2"></i>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        }
+
+        function renderCoffeeBreak() {
+            const container = document.getElementById('coffeebreak-categories-container');
+            container.innerHTML = DEFAULT_DATA.coffeeBreakCategories.map(cat => `
+                <div class="bg-brand-darkPaper border border-gray-800 rounded-2xl p-6 shadow-md">
+                    <div class="flex items-center space-x-3 mb-4 pb-3 border-b border-gray-800">
+                        <div class="p-2.5 bg-gray-900 rounded-xl text-brand-amber"><i class="fa-solid ${cat.icon} text-lg"></i></div>
+                        <h4 class="font-serif text-lg font-bold text-white">${cat.title}</h4>
+                    </div>
+                    <ul class="space-y-1">
+                        ${cat.items.map(item => `<li class="text-sm text-gray-300 py-1"><i class="fa-solid fa-check text-brand-amber text-xs mr-2"></i>${item}</li>`).join('')}
+                    </ul>
+                </div>
+            `).join('');
+        }
+
+        function switchTab(tab) {
+            document.getElementById('content-churrasco').classList.toggle('hidden', tab !== 'churrasco');
+            document.getElementById('content-coffeebreak').classList.toggle('hidden', tab !== 'coffeebreak');
+            document.getElementById('tab-churrasco').className = tab === 'churrasco' ? 'flex-1 py-3 px-4 rounded-xl text-sm font-semibold bg-brand-gold text-black shadow-lg cursor-pointer' : 'flex-1 py-3 px-4 rounded-xl text-sm text-gray-400 hover:text-white cursor-pointer';
+            document.getElementById('tab-coffeebreak').className = tab === 'coffeebreak' ? 'flex-1 py-3 px-4 rounded-xl text-sm font-semibold bg-brand-gold text-black shadow-lg cursor-pointer' : 'flex-1 py-3 px-4 rounded-xl text-sm text-gray-400 hover:text-white cursor-pointer';
+        }

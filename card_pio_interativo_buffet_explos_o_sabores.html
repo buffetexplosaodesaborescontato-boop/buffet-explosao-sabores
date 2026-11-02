@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buffet Explosão Sabores | Cardápio Digital Interativo</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter e Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            gold: '#D4AF37',
+                            amber: '#FFBF00',
+                            burgundy: '#800020',
+                            charcoal: '#121212',
+                            darkPaper: '#1E1E1E',
+                            accent: '#E65100'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-gold-text {
+            background: linear-gradient(135deg, #F39C12 0%, #F1C40F 50%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bg-glass {
+            background: rgba(30, 30, 30, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #121212;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+    </style>
+</head>
+<body class="bg-brand-charcoal text-gray-100 font-sans min-h-screen flex flex-col justify-between selection:bg-brand-amber selection:text-black">
+
+    <!-- TOP ANNOUNCEMENT / ADMIN TOGGLE BAR -->
+    <header class="bg-black/90 border-b border-brand-gold/30 text-xs py-2.5 px-4 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3 text-gray-300">
+                <span class="inline-flex items-center text-brand-amber font-semibold">
+                    <i class="fa-brands fa-whatsapp text-green-400 mr-1.5 text-sm"></i>
+                    <span id="header-phone-display">(21) 97187-6482</span>
+                </span>
+                <span class="hidden md:inline text-gray-500">|</span>
+                <span class="hidden md:inline text-gray-400"><i class="fa-brands fa-instagram text-pink-400 mr-1"></i> <span id="header-insta-display">@BUFFET_EXPLOSÃO_DE_SABORES</span></span>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+                <button id="btn-toggle-calculator" onclick="scrollToCalculator()" class="text-xs bg-brand-amber/10 hover:bg-brand-amber/20 text-brand-amber border border-brand-amber/40 px-3 py-1 rounded-full transition-all">
+                    <i class="fa-solid fa-calculator mr-1"></i> Simular Evento
+                </button>
+                <button id="btn-admin-mode" onclick="toggleAdminMode()" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-600 px-3 py-1 rounded-full flex items-center transition-all">
+                    <i class="fa-solid fa-lock mr-1.5 text-brand-gold" id="admin-icon"></i> 
+                    <span id="admin-btn-text">Painel Admin</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- ADMIN BANNER WARNING (VISIBLE IN ADMIN MODE) -->
+    <div id="admin-banner" class="hidden bg-amber-600 text-black px-4 py-2 text-center text-sm font-semibold flex justify-between items-center shadow-md">
+        <div class="flex items-center justify-center space-x-2 mx-auto">
+            <i class="fa-solid fa-pen-to-square text-lg"></i>
+            <span>MODO DE EDIÇÃO ATIVO — Todas as alterações de preços e itens são salvas automaticamente.</span>
+        </div>
+        <button onclick="toggleAdminMode()" class="bg-black text-white px-3 py-0.5 rounded text-xs hover:bg-gray-800">Sair do Modo Admin</button>
+    </div>
+
+    <!-- HERO / HEADER SECTION -->
+    <section class="relative bg-gradient-to-b from-black via-brand-darkPaper to-brand-charcoal pt-12 pb-16 px-4 border-b border-gray-800">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-block p-2 px-4 rounded-full bg-brand-gold/10 border border-brand-gold/30 text-brand-amber text-xs font-semibold tracking-widest uppercase mb-4">
+                Buffet Completo & Eventos Corporativos
+            </div>
+            <h1 class="font-serif text-4xl sm:text-6xl font-bold tracking-tight text-white mb-3">
+                EXPLOSÃO <span class="gradient-gold-text">SABORES</span>
+            </h1>
+            <p class="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto mb-8 font-light">
+                A experiência gastronômica perfeita para o seu evento social ou corporativo. Churrasco completo com cortes nobres e Coffee Break de alta padrão.
+            </p>
+
+            <!-- NAVIGATION TABS -->
+            <div class="flex justify-center space-x-2 sm:space-x-4 max-w-md mx-auto bg-gray-900/90 p-1.5 rounded-2xl border border-gray-800 shadow-xl">
+                <button id="tab-churrasco" onclick="switchTab('churrasco')" class="flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-200 bg-brand-gold text-black font-semibold shadow-lg">
+                    <i class="fa-solid fa-fire mr-1.5"></i> Buffet de Churrasco
+                </button>
+                <button id="tab-coffeebreak" onclick="switchTab('coffeebreak')" class="flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-200 text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-mug-hot mr-1.5"></i> Coffee Break
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="max-w-6xl mx-auto px-4 py-10 flex-grow w-full">
+
+        <!-- ========================================== -->
+        <!-- TAB 1: BUFFET DE CHURRASCO                 -->
+        <!-- ========================================== -->
+        <div id="content-churrasco" class="space-y-12">
+            
+            <!-- PACKAGES / PRICING CARDS -->
+            <div>
+                <div class="text-center mb-8">
+                    <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white mb-2">Opções de Pacote (por pessoa)</h2>
+                    <p class="text-gray-400 text-xs sm:text-sm">Escolha o pacote ideal para os convidados do seu evento</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Pacote 1: Sem Bebidas -->
+                    <div class="bg-brand-darkPaper border border-gray-800 hover:border-gray-700 rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 relative group hover:-translate-y-1">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="bg-gray-800 text-gray-300 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-gray-700">Sem Bebidas</span>
+                                <i class="fa-solid fa-utensils text-gray-500 text-xl group-hover:text-brand-amber transition-colors"></i>
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-white mb-1">Cardápio Completo</h3>
+                            <p class="text-gray-400 text-xs mb-6">Toda a variedade de entradas, carnes nobres, guarnições e sobremesa.</p>
+                            <div class="mb-6">
+                                <span class="text-xs text-gray-400 block">Investimento individual:</span>
+                                <div class="flex items-baseline">
+                                    <span class="text-sm font-semibold text-brand-amber mr-1">R$</span>
+                                    <span class="text-4xl font-bold text-white price-field" data-key="priceChurrascoSemBebida">88,00</span>
+                                    <span class="text-xs text-gray-400 ml-1">/ pessoa</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="openBookingWhatsApp('Buffet de Churrasco - Sem Bebidas', getPrice('priceChurrascoSemBebida'))" class="w-full py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold transition-colors flex items-center justify-center space-x-2">
+                            <i class="fa-brands fa-whatsapp text-green-400 text-base"></i>
+                            <span>Solicitar Reserva</span>
+                        </button>
+                    </div>
+
+                    <!-- Pacote 2: Com Bebidas Não Alcóolicas -->
+                    <div class="bg-brand-darkPaper border border-brand-amber/50 rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 relative group hover:-translate-y-1 shadow-lg shadow-brand-amber/5">
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-amber text-black text-[10px] font-bold uppercase tracking-widest px-3 py-0.5 rounded-full shadow">
+                            Mais Popular
+                        </div>
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="bg-brand-amber/20 text-brand-amber text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-brand-amber/30">Sem Álcool</span>
+                                <i class="fa-solid fa-glass-water text-brand-amber text-xl"></i>
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-white mb-1">Com Bebidas Leves</h3>
+                            <p class="text-gray-400 text-xs mb-6">Cardápio completo + Refrigerantes variados, sucos e água mineral.</p>
+                            <div class="mb-6">
+                                <span class="text-xs text-gray-400 block">Investimento individual:</span>
+                                <div class="flex items-baseline">
+                                    <span class="text-sm font-semibold text-brand-amber mr-1">R$</span>
+                                    <span class="text-4xl font-bold text-white price-field" data-key="priceChurrascoComBebida">98,00</span>
+                                    <span class="text-xs text-gray-400 ml-1">/ pessoa</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="openBookingWhatsApp('Buffet de Churrasco - Com Bebidas Não Alcoólicas', getPrice('priceChurrascoComBebida'))" class="w-full py-3 bg-brand-amber hover:bg-yellow-500 text-black rounded-xl text-sm font-bold transition-colors flex items-center justify-center space-x-2">
+                            <i class="fa-brands fa-whatsapp text-black text-base"></i>
+                            <span>Solicitar Reserva</span>
+                        </button>
+                    </div>
+
+                    <!-- Pacote 3: Com Cerveja & Drinks -->
+                    <div class="bg-gradient-to-b from-brand-darkPaper to-gray-900 border border-gray-800 hover:border-brand-gold/40 rounded-2xl p-6 flex flex-col justify-between transition-all duration-300 relative group hover:-translate-y-1">
+                        <div>
+                            <div class="flex justify-between items-start mb-4">
+                                <span class="bg-purple-900/40 text-purple-300 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-purple-700/50">Experiência VIP</span>
+                                <i class="fa-solid fa-beer-mug-empty text-yellow-500 text-xl"></i>
+                            </div>
+                            <h3 class="font-serif text-xl font-bold text-white mb-1">Cerveja & Open Bar</h3>
+                            <p class="text-gray-400 text-xs mb-6">Cardápio completo + Bebidas sem álcool + Cervejas (Antarctica, Brahma ou Império) + Caipirinha & Caipivodka.</p>
+                            <div class="mb-6">
+                                <span class="text-xs text-gray-400 block">Investimento individual:</span>
+                                <div class="flex items-baseline">
+                                    <span class="text-sm font-semibold text-brand-amber mr-1">R$</span>
+                                    <span class="text-4xl font-bold text-white price-field" data-key="priceChurrascoComCerveja">140,00</span>
+                                    <span class="text-xs text-gray-400 ml-1">/ pessoa</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="openBookingWhatsApp('Buffet de Churrasco - Completo com Cerveja e Drinks', getPrice('priceChurrascoComCerveja'))" class="w-full py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold transition-colors flex items-center justify-center space-x-2">
+                            <i class="fa-brands fa-whatsapp text-green-400 text-base"></i>
+                            <span>Solicitar Reserva</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CHURRASCO MENU CATEGORIES -->
+            <div class="space-y-8">
+                <div class="border-b border-gray-800 pb-4 flex flex-col sm:flex-row justify-between items-start sm:items-end">
+                    <div>
+                        <h3 class="font-serif text-2xl font-bold text-white">Cardápio Detalhado do Churrasco</h3>
+                        <p class="text-gray-400 text-xs sm:text-sm">Tudo preparado na hora com matéria-prima de primeira qualidade.</p>
+                    </div>
+                    <span class="text-xs bg-gray-800 text-gray-300 px-3 py-1 rounded-full mt-2 sm:mt-0">
+                        <i class="fa-solid fa-concierge-bell text-brand-amber mr-1"></i> Serviço Completo Incluído
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="churrasco-categories-container">
+                    <!-- Categorias renderizadas via JS -->
+                </div>
+            </div>
+
+            <!-- OBSERVATION / INCLUSIONS BOX -->
+            <div class="bg-gray-900/80 border border-gray-800 rounded-2xl p-6 text-sm text-gray-300 flex items-start space-x-4">
+                <div class="p-3 bg-brand-amber/10 rounded-xl text-brand-amber mt-1">
+                    <i class="fa-solid fa-circle-info text-xl"></i>
+                </div>
+                <div class="space-y-1">
+                    <h4 class="font-bold text-white text-base">Informações e Cortesias do Pacote de Churrasco</h4>
+                    <p class="text-gray-400 text-xs sm:text-sm">
+                        • <strong>Bebidas incluídas no pacote completo:</strong> Refrigerantes, sucos variados, água mineral e cervejas (Antarctica, Brahma ou Império). Para outras marcas desejadas, consulte-nos para orçamento.<br>
+                        • <strong>Drinks inclusos no VIP:</strong> Caipirinha de limão artesanal e Caipivodka.<br>
+                        • <strong>Estrutura:</strong> Levamos todo o material de apoio necessário (pratos, talheres, copos, churrasqueiro e garçons qualificados).
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- TAB 2: COFFEE BREAK CORPORATIVO            -->
+        <!-- ========================================== -->
+        <div id="content-coffeebreak" class="hidden space-y-12">
+            
+            <!-- COFFEE BREAK HERO BANNER -->
+            <div class="bg-gradient-to-r from-amber-950/40 via-brand-darkPaper to-gray-900 border border-brand-amber/30 rounded-3xl p-6 sm:p-10 flex flex-col md:flex-row justify-between items-center gap-8 shadow-2xl">
+                <div class="space-y-4 max-w-xl text-center md:text-left">
+                    <span class="bg-brand-amber/20 text-brand-amber text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wider border border-brand-amber/40">
+                        Eventos Corporativos & Reuniões
+                    </span>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-bold text-white">Serviço de Coffee Break Especial</h2>
+                    <p class="text-gray-300 text-sm leading-relaxed">
+                        Estrutura completa com itens frescos e variados para surpreender seus parceiros, convidados ou colaboradores em reuniões e workshops.
+                    </p>
+                    <div class="flex items-center justify-center md:justify-start space-x-2 pt-2">
+                        <i class="fa-solid fa-users text-gray-400"></i>
+                        <span class="text-xs text-gray-400">Atendimento mínimo a partir de <strong>30 pessoas</strong>.</span>
+                    </div>
+                </div>
+
+                <div class="bg-black/80 border border-gray-800 rounded-2xl p-6 text-center min-w-[240px] shadow-xl">
+                    <span class="text-xs text-gray-400 block uppercase tracking-wider font-semibold">Valor Por Pessoa</span>
+                    <div class="flex items-baseline justify-center my-2">
+                        <span class="text-lg font-bold text-brand-amber mr-1">R$</span>
+                        <span class="text-5xl font-extrabold text-white price-field" data-key="priceCoffeeBreak">65,00</span>
+                    </div>
+                    <span class="text-xs text-gray-400 block mb-4">Pacote Corporativo & Social</span>
+                    <button onclick="openBookingWhatsApp('Coffee Break Corporativo', getPrice('priceCoffeeBreak'))" class="w-full py-3 bg-brand-amber hover:bg-yellow-500 text-black font-bold rounded-xl text-sm transition-all flex items-center justify-center space-x-2">
+                        <i class="fa-brands fa-whatsapp text-black text-base"></i>
+                        <span>Reservar Data</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- COFFEE BREAK MENU CATEGORIES -->
+            <div class="space-y-8">
+                <div class="border-b border-gray-800 pb-4">
+                    <h3 class="font-serif text-2xl font-bold text-white">Itens do Buffet de Coffee Break</h3>
+                    <p class="text-gray-400 text-xs sm:text-sm">Seleção rigorosa de pães artesanais, frios nobres, salgados assados e doces.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="coffeebreak-categories-container">
+                    <!-- Renderizado via JS -->
+                </div>
+            </div>
+
+            <!-- GENERAL CONDITIONS -->
+            <div class="bg-brand-darkPaper border border-gray-800 rounded-2xl p-6 sm:p-8 space-y-4">
+                <h4 class="font-serif text-xl font-bold text-white flex items-center">
+                    <i class="fa-solid fa-clipboard-check text-brand-amber mr-2.5"></i>
+                    Condições Gerais do Coffee Break
+                </h4>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-sm text-gray-300">
+                    <div class="bg-gray-900/60 p-4 rounded-xl border border-gray-800/80">
+                        <div class="font-semibold text-white mb-1 flex items-center">
+                            <i class="fa-solid fa-user-group text-brand-gold text-xs mr-2"></i> Mínimo Contratual
+                        </div>
+                        <p class="text-xs text-gray-400">Atendimento presencial para no mínimo 30 pessoas por evento contratado.</p>
+                    </div>
+
+                    <div class="bg-gray-900/60 p-4 rounded-xl border border-gray-800/80">
+                        <div class="font-semibold text-white mb-1 flex items-center">
+                            <i class="fa-solid fa-utensils text-brand-gold text-xs mr-2"></i> Estrutura Completa
+                        </div>
+                        <p class="text-xs text-gray-400">Inclui mesa ornamentada, pratos, copos, guardanapos e suporte de garçons/atendimento.</p>
+                    </div>
+
+                    <div class="bg-gray-900/60 p-4 rounded-xl border border-gray-800/80">
+                        <div class="font-semibold text-white mb-1 flex items-center">
+                            <i class="fa-solid fa-sliders text-brand-gold text-xs mr-2"></i> Personalização
+                        </div>
+                        <p class="text-xs text-gray-400">Opções de substituição disponíveis para restrições alimentares (ex: vegetarianas/sem glúten).</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================== -->
+        <!-- BUDGET CALCULATOR SECTION                  -->
+        <!-- ========================================== -->
+        <section id="calculator-section" class="mt-16 bg-gradient-to-b from-gray-900 to-black border border-gray-800 rounded-3xl p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+            <div class="absolute top-0 right-0 -mr-16 -mt-16 w-64 h-64 bg-brand-amber/5 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="max-w-3xl mx-auto space-y-6">
+                <div class="text-center space-y-2">
+                    <span class="text-xs font-semibold text-brand-amber uppercase tracking-widest bg-brand-amber/10 px-3 py-1 rounded-full border border-brand-amber/20">
+                        Simulador Rápido
+                    </span>
+                    <h3 class="font-serif text-2xl sm:text-3xl font-bold text-white">Calcule a Estimativa do Seu Evento</h3>
+                    <p class="text-gray-400 text-xs sm:text-sm">Selecione o tipo de serviço e informe o número de convidados para obter um orçamento em tempo real.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-brand-darkPaper/80 p-6 rounded-2xl border border-gray-800">
+                    <div class="space-y-2">
+                        <label class="text-xs font-semibold text-gray-300 block">1. Selecione o Serviço / Pacote:</label>
+                        <select id="calc-package" onchange="updateCalculator()" class="w-full bg-gray-900 border border-gray-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-amber">
+                            <option value="churrasco_1">Churrasco - Sem Bebidas (R$ 88,00 / pess.)</option>
+                            <option value="churrasco_2" selected>Churrasco - Bebidas Não Alcoólicas (R$ 98,00 / pess.)</option>
+                            <option value="churrasco_3">Churrasco - Cervejas & Open Bar (R$ 140,00 / pess.)</option>
+                            <option value="coffeebreak">Coffee Break Corporativo (R$ 65,00 / pess.)</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-xs font-semibold text-gray-300">2. Número de Convidados:</label>
+                            <span id="calc-guests-count" class="text-sm font-bold text-brand-amber">50 Pessoas</span>
+                        </div>
+                        <input type="range" id="calc-guests" min="30" max="300" step="5" value="50" oninput="updateCalculator()" class="w-full accent-brand-amber bg-gray-800 rounded-lg cursor-pointer h-2">
+                        <div class="flex justify-between text-[10px] text-gray-500">
+                            <span>Mínimo 30</span>
+                            <span>150</span>
+                            <span>300+</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ESTIMATE RESULT DISPLAY -->
+                <div class="bg-gray-950 p-6 rounded-2xl border border-brand-amber/30 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div>
+                        <span class="text-xs text-gray-400 block">Investimento Total Estimado:</span>
+                        <div class="flex items-baseline">
+                            <span class="text-lg font-bold text-brand-amber mr-1">R$</span>
+                            <span id="calc-total" class="text-3xl sm:text-4xl font-extrabold text-white">4.900,00</span>
+                        </div>
+                        <span class="text-[11px] text-gray-500">*Valores sujeitos a confirmação de disponibilidade de data e local.</span>
+                    </div>
+
+                    <button onclick="sendCalculatedWhatsApp()" class="w-full sm:w-auto py-3.5 px-6 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl text-sm transition-all shadow-lg shadow-green-950/50 flex items-center justify-center space-x-2">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>Enviar Orçamento no WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-black border-t border-gray-800 text-gray-400 py-10 px-4 text-xs mt-16">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div class="text-center md:text-left">
+                <h4 class="font-serif text-lg font-bold text-white mb-1">EXPLOSÃO SABORES</h4>
+                <p class="text-gray-500">Buffet Completo & Eventos Corporativos. Qualidade e excelência em serviços de gastronomia.</p>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center gap-4">
+                <a id="footer-phone-link" href="https://wa.me/5521971876482" target="_blank" class="flex items-center space-x-2 bg-gray-900 border border-gray-800 hover:border-brand-amber px-4 py-2 rounded-xl text-gray-300 hover:text-white transition-colors">
+                    <i class="fa-brands fa-whatsapp text-green-400 text-base"></i>
+                    <span id="footer-phone-display">(21) 97187-6482</span>
+                </a>
+                <a id="footer-insta-link" href="https://instagram.com/buffet_explosao_de_sabores" target="_blank" class="flex items-center space-x-2 bg-gray-900 border border-gray-800 hover:border-pink-500 px-4 py-2 rounded-xl text-gray-300 hover:text-white transition-colors">
+                    <i class="fa-brands fa-instagram text-pink-400 text-base"></i>
+                    <span id="footer-insta-display">@BUFFET_EXPLOSÃO_DE_SABORES</span>
+                </a>
+            </div>
+        </div>
+        <div class="max-w-6xl mx-auto mt-8 pt-6 border-t border-gray-900 text-center text-gray-600 text-[11px]">
+            © <span id="current-year"></span> Buffet Explosão Sabores. Todos os direitos reservados.
+        </div>
+    </footer>
+
+    <!-- MODAL ADMIN LOGIN -->
+    <div id="modal-admin-login" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-brand-darkPaper border border-gray-800 rounded-2xl p-6 max-w-sm w-full space-y-4 shadow-2xl">
+            <div class="text-center">
+                <div class="w-12 h-12 bg-brand-amber/10 text-brand-amber rounded-full flex items-center justify-center mx-auto mb-2">
+                    <i class="fa-solid fa-lock text-xl"></i>
+                </div>
+                <h3 class="font-serif text-xl font-bold text-white">Acesso Administrativo</h3>
+                <p class="text-xs text-gray-400">Digite a senha para habilitar a edição do cardápio.</p>
+            </div>
+            
+            <div>
+                <label class="text-xs text-gray-300 block mb-1">Senha de acesso:</label>
+                <input type="password" id="admin-password-input" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2.5 text-white text-sm focus:outline-none focus:border-brand-amber" placeholder="Digite a senha (padrão: 1234)">
+                <p id="admin-login-error" class="text-red-400 text-xs mt-1 hidden">Senha incorreta. Tente novamente.</p>
+            </div>
+
+            <div class="flex space-x-2 pt-2">
+                <button onclick="closeAdminLoginModal()" class="flex-1 py-2.5 bg-gray-800 text-gray-300 rounded-xl text-xs font-semibold hover:bg-gray-700">Cancelar</button>
+                <button onclick="submitAdminLogin()" class="flex-1 py-2.5 bg-brand-amber text-black rounded-xl text-xs font-bold hover:bg-yellow-500">Entrar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL EDIT ITEM / ADD ITEM -->
+    <div id="modal-edit-item" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-brand-darkPaper border border-gray-800 rounded-2xl p-6 max-w-md w-full space-y-4 shadow-2xl">
+            <h3 class="font-serif text-xl font-bold text-white" id="modal-item-title">Editar Item</h3>
+            
+            <input type="hidden" id="edit-item-category-id">
+            <input type="hidden" id="edit-item-index">
+
+            <div>
+                <label class="text-xs text-gray-300 block mb-1">Nome do Item:</label>
+                <input type="text" id="edit-item-name" class="w-full bg-gray-900 border border-gray-700 rounded-xl px-4 py-2 text-white text-sm focus:outline-none focus:border-brand-amber">
+            </div>
+
+            <div class="flex space-x-2 pt-2">
+                <button onclick="closeEditItemModal()" class="flex-1 py-2.5 bg-gray-800 text-gray-300 rounded-xl text-xs font-semibold hover:bg-gray-700">Cancelar</button>
+                <button onclick="saveItemChanges()" class="flex-1 py-2.5 bg-brand-amber text-black rounded-xl text-xs font-bold hover:bg-yellow-500">Salvar Alterações</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- APPLICATION LOGIC & DATA SCRIPT -->
+    <script>
+        // Set current year
+        document.getElementById('current-year').textContent = new Date().getFullYear();
+
+        // -------------------------------------------------------------
+        // DEFAULT INITIAL DATA (ORIGINATED FROM PDF CONTENT)
+        // -------------------------------------------------------------
+        const DEFAULT_DATA = {
+            contact: {
+                phone: "(21) 97187-6482",
+                whatsappRaw: "5521971876482",
+                instagram: "@BUFFET_EXPLOSÃO_DE_SABORES"
+            },
+            prices: {
+                priceChurrascoSemBebida: "88,00",
+                priceChurrascoComBebida: "98,00",
+                priceChurrascoComCerveja: "140,00",
+                priceCoffeeBreak: "65,00"
+            },
+            churrascoCategories: [
+                {
+                    id: "entradas",
+                    title: "Entradas & Especialidades",
+                    icon: "fa-concierge-bell",
+                    items: [
+                        "Salgadinhos fritos variados",
+                        "Caldo de feijão especial",
+                        "Pão de alho crocante",
+                        "Pão de linguiça artesanal"
+                    ]
+                },
+                {
+                    id: "proteinas",
+                    title: "Proteínas & Carnes (13 Opções)",
+                    icon: "fa-drumstick-bite",
+                    items: [
+                        "Alcatra nobre",
+                        "Picanha selecionada",
+                        "Maminha macia",
+                        "Fraldinha grelhada",
+                        "Contrafilé",
+                        "Costela gaúcha",
+                        "Costelinha suína ao barbecue",
+                        "Drumet temperado",
+                        "Tulipa de frango",
+                        "Coração de frango",
+                        "Linguiça tradicional",
+                        "Salsichão",
+                        "Queijo coalho grelhado"
+                    ]
+                },
+                {
+                    id: "guarnicoes",
+                    title: "Guarnições & Acompanhamentos",
+                    icon: "fa-bowl-rice",
+                    items: [
+                        "Arroz branco soltinho",
+                        "Feijão tropeiro tradicional",
+                        "Feijão amigo saboroso",
+                        "Farofa da casa crocante",
+                        "Salpicão de frango",
+                        "Macarronese cremosa",
+                        "Tabule fresco",
+                        "Salada César clássica",
+                        "Salada de feijão-fradinho",
+                        "Vinagrete especial",
+                        "Batata calabresa temperada",
+                        "Batata frita crocante"
+                    ]
+                },
+                {
+                    id: "sobremesa",
+                    title: "Sobremesa",
+                    icon: "fa-ice-cream",
+                    items: [
+                        "Banana assada com sorvete de creme"
+                    ]
+                }
+            ],
+            coffeeBreakCategories: [
+                {
+                    id: "paes_salgados",
+                    title: "Pães & Salgados",
+                    icon: "fa-bread-slice",
+                    items: [
+                        "Pão a metro recheado",
+                        "Sanduíches artesanais (3 variações de recheio)",
+                        "Pão francês fresco",
+                        "Salgados assados de forno",
+                        "Pão de queijo quentinho",
+                        "Quiches variadas (3 tipos)",
+                        "Mini cachorro-quente"
+                    ]
+                },
+                {
+                    id: "frios_acompanhamentos",
+                    title: "Frios & Acompanhamentos",
+                    icon: "fa-cheese",
+                    items: [
+                        "Tábua de frios selecionados",
+                        "Manteiga cremosa",
+                        "Geleias de frutas artesanais",
+                        "Torradas crocantes"
+                    ]
+                },
+                {
+                    id: "doces_frutas",
+                    title: "Doces & Frutas",
+                    icon: "fa-apple-whole",
+                    items: [
+                        "Bolos caseiros (sabores variados)",
+                        "Biscoitos finos amanteigados",
+                        "Salada de frutas frescas da estação"
+                    ]
+                }
+            ]
+        };
+
+        // -------------------------------------------------------------
+        // APPLICATION STATE MANAGEMENT
+        // -------------------------------------------------------------
+        let appData = {};
+        let isAdminMode = false;
+
+        // Initialize state from localStorage or Default Data
+        function initData() {
+            const stored = localStorage.getItem('buffet_explosaosabores_data');
+            if (stored) {
+                try {
+                    appData = JSON.parse(stored);
+                } catch (e) {
+                    console.error("Erro ao carregar localStorage", e);
+                    appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+                }
+            } else {
+                appData = JSON.parse(JSON.stringify(DEFAULT_DATA));
+            }
+            saveDataToLocalStorage();
+        }
+
+        function saveDataToLocalStorage() {
+            localStorage.setItem('buffet_explosaosabores_data', JSON.stringify(appData));
+        }
+
+        // -------------------------------------------------------------
+        // RENDER FUNCTIONS
+        // -------------------------------------------------------------
+        function renderAll() {
+            renderHeaderAndContact();
+            renderPrices();
+            renderChurrascoCategories();
+            renderCoffeeBreakCategories();
+            updateCalculator();
+        }
+
+        function renderHeaderAndContact() {
+            document.getElementById('header-phone-display').textContent = appData.contact.phone;
+            document.getElementById('header-insta-display').textContent = appData.contact.instagram;
+            document.getElementById('footer-phone-display').textContent = appData.contact.phone;
+            document.getElementById('footer-insta-display').textContent = appData.contact.instagram;
+            document.getElementById('footer-phone-link').href = `https://wa.me/${appData.contact.whatsappRaw}`;
+        }
+
+        function renderPrices() {
+            document.querySelectorAll('.price-field').forEach(el => {
+                const key = el.getAttribute('data-key');
+                if (appData.prices[key]) {
+                    if (isAdminMode) {
+                        el.innerHTML = `<input type="text" value="${appData.prices[key]}" onchange="updatePrice('${key}', this.value)" class="w-24 bg-gray-900 border border-brand-amber text-brand-amber px-2 py-1 rounded text-2xl font-bold focus:outline-none">`;
+                    } else {
+                        el.textContent = appData.prices[key];
+                    }
+                }
+            });
+        }
+
+        function updatePrice(key, value) {
+            appData.prices[key] = value;
+            saveDataToLocalStorage();
+            updateCalculator();
+        }
+
+        function renderChurrascoCategories() {
+            const container = document.getElementById('churrasco-categories-container');
+            container.innerHTML = '';
+
+            appData.churrascoCategories.forEach((cat) => {
+                const card = document.createElement('div');
+                card.className = "bg-brand-darkPaper border border-gray-800 rounded-2xl p-6 shadow-md hover:border-gray-700 transition-colors";
+
+                let itemsHTML = cat.items.map((item, idx) => `
+                    <li class="flex items-center justify-between text-sm text-gray-300 py-1.5 border-b border-gray-800/60 last:border-none">
+                        <span class="flex items-center">
+                            <i class="fa-solid fa-check text-brand-amber text-xs mr-2.5"></i>
+                            <span>${item}</span>
+                        </span>
+                        ${isAdminMode ? `
+                            <div class="flex items-center space-x-1 ml-2">
+                                <button onclick="openEditItemModal('churrasco', '${cat.id}', ${idx}, '${item.replace(/'/g, "\\'")}')" class="text-xs text-gray-400 hover:text-brand-amber px-1.5 py-0.5 rounded">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button onclick="deleteItem('churrasco', '${cat.id}', ${idx})" class="text-xs text-red-400 hover:text-red-300 px-1.5 py-0.5 rounded">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        ` : ''}
+                    </li>
+                `).join('');
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-800">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2.5 bg-gray-900 rounded-xl text-brand-amber">
+                                <i class="fa-solid ${cat.icon} text-lg"></i>
+                            </div>
+                            <h4 class="font-serif text-lg font-bold text-white">${cat.title}</h4>
+                        </div>
+                        ${isAdminMode ? `
+                            <button onclick="addNewItemPrompt('churrasco', '${cat.id}')" class="text-xs bg-brand-amber/20 hover:bg-brand-amber/30 text-brand-amber border border-brand-amber/40 px-2.5 py-1 rounded-lg">
+                                <i class="fa-solid fa-plus mr-1"></i> Item
+                            </button>
+                        ` : ''}
+                    </div>
+                    <ul class="space-y-1">
+                        ${itemsHTML}
+                    </ul>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function renderCoffeeBreakCategories() {
+            const container = document.getElementById('coffeebreak-categories-container');
+            container.innerHTML = '';
+
+            appData.coffeeBreakCategories.forEach((cat) => {
+                const card = document.createElement('div');
+                card.className = "bg-brand-darkPaper border border-gray-800 rounded-2xl p-6 shadow-md hover:border-gray-700 transition-colors";
+
+                let itemsHTML = cat.items.map((item, idx) => `
+                    <li class="flex items-center justify-between text-sm text-gray-300 py-1.5 border-b border-gray-800/60 last:border-none">
+                        <span class="flex items-center">
+                            <i class="fa-solid fa-check text-brand-amber text-xs mr-2.5"></i>
+                            <span>${item}</span>
+                        </span>
+                        ${isAdminMode ? `
+                            <div class="flex items-center space-x-1 ml-2">
+                                <button onclick="openEditItemModal('coffeebreak', '${cat.id}', ${idx}, '${item.replace(/'/g, "\\'")}')" class="text-xs text-gray-400 hover:text-brand-amber px-1.5 py-0.5 rounded">
+                                    <i class="fa-solid fa-pen"></i>
+                                </button>
+                                <button onclick="deleteItem('coffeebreak', '${cat.id}', ${idx})" class="text-xs text-red-400 hover:text-red-300 px-1.5 py-0.5 rounded">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </div>
+                        ` : ''}
+                    </li>
+                `).join('');
+
+                card.innerHTML = `
+                    <div class="flex justify-between items-center mb-4 pb-3 border-b border-gray-800">
+                        <div class="flex items-center space-x-3">
+                            <div class="p-2.5 bg-gray-900 rounded-xl text-brand-amber">
+                                <i class="fa-solid ${cat.icon} text-lg"></i>
+                            </div>
+                            <h4 class="font-serif text-lg font-bold text-white">${cat.title}</h4>
+                        </div>
+                        ${isAdminMode ? `
+                            <button onclick="addNewItemPrompt('coffeebreak', '${cat.id}')" class="text-xs bg-brand-amber/20 hover:bg-brand-amber/30 text-brand-amber border border-brand-amber/40 px-2.5 py-1 rounded-lg">
+                                <i class="fa-solid fa-plus mr-1"></i> Item
+                            </button>
+                        ` : ''}
+                    </div>
+                    <ul class="space-y-1">
+                        ${itemsHTML}
+                    </ul>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // -------------------------------------------------------------
+        // ITEM EDITING LOGIC
+        // -------------------------------------------------------------
+        let currentEditingModule = '';
+
+        function openEditItemModal(module, categoryId, index, currentText) {
+            currentEditingModule = module;
+            document.getElementById('edit-item-category-id').value = categoryId;
+            document.getElementById('edit-item-index').value = index;
+            document.getElementById('edit-item-name').value = currentText;
+            document.getElementById('modal-item-title').textContent = "Editar Item";
+            document.getElementById('modal-edit-item').classList.remove('hidden');
+        }
+
+        function closeEditItemModal() {
+            document.getElementById('modal-edit-item').classList.add('hidden');
+        }
+
+        function saveItemChanges() {
+            const categoryId = document.getElementById('edit-item-category-id').value;
+            const index = parseInt(document.getElementById('edit-item-index').value);
+            const newText = document.getElementById('edit-item-name').value.trim();
+
+            if (!newText) return;
+
+            const categories = currentEditingModule === 'churrasco' 
+                ? appData.churrascoCategories 
+                : appData.coffeeBreakCategories;
+
+            const catObj = categories.find(c => c.id === categoryId);
+            if (catObj) {
+                if (index >= 0 && index < catObj.items.length) {
+                    catObj.items[index] = newText;
+                } else if (index === -1) {
+                    catObj.items.push(newText);
+                }
+                saveDataToLocalStorage();
+                renderAll();
+                closeEditItemModal();
+            }
+        }
+
+        function addNewItemPrompt(module, categoryId) {
+            currentEditingModule = module;
+            document.getElementById('edit-item-category-id').value = categoryId;
+            document.getElementById('edit-item-index').value = -1;
+            document.getElementById('edit-item-name').value = '';
+            document.getElementById('modal-item-title').textContent = "Adicionar Novo Item";
+            document.getElementById('modal-edit-item').classList.remove('hidden');
+        }
+
+        function deleteItem(module, categoryId, index) {
+            if (!confirm("Tem certeza que deseja remover este item?")) return;
+
+            const categories = module === 'churrasco' 
+                ? appData.churrascoCategories 
+                : appData.coffeeBreakCategories;
+
+            const catObj = categories.find(c => c.id === categoryId);
+            if (catObj && index >= 0) {
+                catObj.items.splice(index, 1);
+                saveDataToLocalStorage();
+                renderAll();
+            }
+        }
+
+        // -------------------------------------------------------------
+        // ADMIN MODE TOGGLE & AUTH
+        // -------------------------------------------------------------
+        function toggleAdminMode() {
+            if (isAdminMode) {
+                isAdminMode = false;
+                document.getElementById('admin-banner').classList.add('hidden');
+                document.getElementById('admin-btn-text').textContent = "Painel Admin";
+                document.getElementById('admin-icon').className = "fa-solid fa-lock mr-1.5 text-brand-gold";
+                renderAll();
+            } else {
+                document.getElementById('modal-admin-login').classList.remove('hidden');
+            }
+        }
+
+        function closeAdminLoginModal() {
+            document.getElementById('modal-admin-login').classList.add('hidden');
+            document.getElementById('admin-login-error').classList.add('hidden');
+        }
+
+        function submitAdminLogin() {
+            const pass = document.getElementById('admin-password-input').value;
+            if (pass === '1234') {
+                isAdminMode = true;
+                closeAdminLoginModal();
+                document.getElementById('admin-banner').classList.remove('hidden');
+                document.getElementById('admin-btn-text').textContent = "Sair do Modo Admin";
+                document.getElementById('admin-icon').className = "fa-solid fa-unlock mr-1.5 text-green-400";
+                renderAll();
+            } else {
+                document.getElementById('admin-login-error').classList.remove('hidden');
+            }
+        }
+
+        // -------------------------------------------------------------
+        // TABS & INTERACTION
+        // -------------------------------------------------------------
+        function switchTab(tabName) {
+            const tabChurrasco = document.getElementById('tab-churrasco');
+            const tabCoffee = document.getElementById('tab-coffeebreak');
+            const contentChurrasco = document.getElementById('content-churrasco');
+            const contentCoffee = document.getElementById('content-coffeebreak');
+
+            if (tabName === 'churrasco') {
+                tabChurrasco.className = "flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 bg-brand-gold text-black shadow-lg";
+                tabCoffee.className = "flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-200 text-gray-400 hover:text-white";
+                contentChurrasco.classList.remove('hidden');
+                contentCoffee.classList.add('hidden');
+            } else {
+                tabCoffee.className = "flex-1 py-3 px-4 rounded-xl text-sm font-semibold transition-all duration-200 bg-brand-gold text-black shadow-lg";
+                tabChurrasco.className = "flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-200 text-gray-400 hover:text-white";
+                contentCoffee.classList.remove('hidden');
+                contentChurrasco.classList.add('hidden');
+            }
+        }
+
+        function scrollToCalculator() {
+            document.getElementById('calculator-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Helper to parse price string to number
+        function getPrice(key) {
+            const str = appData.prices[key] || "0";
+            return parseFloat(str.replace('.', '').replace(',', '.'));
+        }
+
+        // -------------------------------------------------------------
+        // BUDGET CALCULATOR LOGIC
+        // -------------------------------------------------------------
+        function updateCalculator() {
+            const packageVal = document.getElementById('calc-package').value;
+            const guests = parseInt(document.getElementById('calc-guests').value);
+            document.getElementById('calc-guests-count').textContent = `${guests} Pessoas`;
+
+            let pricePerPerson = 0;
+            if (packageVal === 'churrasco_1') pricePerPerson = getPrice('priceChurrascoSemBebida');
+            else if (packageVal === 'churrasco_2') pricePerPerson = getPrice('priceChurrascoComBebida');
+            else if (packageVal === 'churrasco_3') pricePerPerson = getPrice('priceChurrascoComCerveja');
+            else if (packageVal === 'coffeebreak') pricePerPerson = getPrice('priceCoffeeBreak');
+
+            const total = pricePerPerson * guests;
+            
+            document.getElementById('calc-total').textContent = total.toLocaleString('pt-BR', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+        }
+
+        // -------------------------------------------------------------
+        // WHATSAPP INTEGRATION
+        // -------------------------------------------------------------
+        function openBookingWhatsApp(packageName, priceValue) {
+            const phone = appData.contact.whatsappRaw;
+            const message = `Olá! Gostaria de consultar a disponibilidade de data para o serviço:\n\n📌 *${packageName}*\n💰 Valor por pessoa: R$ ${priceValue.toFixed(2).replace('.', ',')}\n\nPoderia me enviar mais detalhes?`;
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        function sendCalculatedWhatsApp() {
+            const packageSelect = document.getElementById('calc-package');
+            const packageName = packageSelect.options[packageSelect.selectedIndex].text;
+            const guests = document.getElementById('calc-guests').value;
+            const total = document.getElementById('calc-total').textContent;
+
+            const phone = appData.contact.whatsappRaw;
+            const message = `Olá, Buffet Explosão Sabores!\nFiz uma simulação pelo site e gostaria de solicitar um orçamento formal:\n\n🎉 *Serviço:* ${packageName}\n👥 *Nº de Convidados:* ${guests} pessoas\n💵 *Estimativa Total:* R$ ${total}\n\nPodemos verificar datas disponíveis?`;
+            
+            window.open(`https://wa.me/${phone}?text=${encodeURIComponent(message)}`, '_blank');
+        }
+
+        // Initialize App on Page Load
+        window.onload = function() {
+            initData();
+            renderAll();
+        };
+    </script>
+</body>
+</html>

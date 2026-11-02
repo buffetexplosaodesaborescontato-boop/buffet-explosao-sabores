@@ -1,412 +1,367 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Buffet Explosão Sabores | Dashboard & Gestão</title>
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <!-- FontAwesome Icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- html2pdf.js para Geração de Contrato -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <style>
-    @media print {
-      body * { visibility: hidden; }
-      #pdf-template, #pdf-template * { visibility: visible; }
-      #pdf-template { position: absolute; left: 0; top: 0; width: 100%; }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Buffet Explosão Sabores | Cardápio Digital & Gestão</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter e Playfair Display -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- html2pdf.js para Geração de Contratos em PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            gold: '#D4AF37',
+                            amber: '#FFBF00',
+                            burgundy: '#800020',
+                            charcoal: '#121212',
+                            darkPaper: '#1E1E1E',
+                            accent: '#E65100'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        serif: ['Playfair Display', 'serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-gold-text {
+            background: linear-gradient(135deg, #F39C12 0%, #F1C40F 50%, #D4AF37 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        @media print {
+            body * { visibility: hidden; }
+            #pdf-template, #pdf-template * { visibility: visible; }
+            #pdf-template { position: absolute; left: 0; top: 0; width: 100%; }
+        }
+    </style>
 </head>
-<body class="bg-stone-900 text-amber-50 font-sans min-h-screen flex flex-col">
+<body class="bg-brand-charcoal text-gray-100 font-sans min-h-screen flex flex-col justify-between selection:bg-brand-amber selection:text-black">
 
-  <!-- Header -->
-  <header class="bg-stone-950 border-b border-amber-500/30 p-4 sticky top-0 z-40 shadow-md">
-    <div class="max-w-6xl mx-auto flex justify-between items-center">
-      <div class="flex items-center space-x-3">
-        <i class="fa-solid font-bold text-amber-500 text-2xl fa-utensils"></i>
-        <h1 class="text-lg md:text-xl font-bold tracking-wider text-amber-400">BUFFET EXPLOSÃO SABORES</h1>
-      </div>
-      <button onclick="toggleAdminModal()" class="bg-amber-600 hover:bg-amber-500 text-stone-950 px-4 py-2 rounded-lg font-semibold text-sm transition">
-        <i class="fa-solid fa-lock mr-2"></i>Painel Admin
-      </button>
-    </div>
-  </header>
-
-  <!-- Conteúdo Principal -->
-  <main class="max-w-6xl mx-auto p-4 flex-grow w-full space-y-8">
-    
-    <!-- Hero / Galeria Dinâmica -->
-    <section class="text-center py-8 bg-stone-950/60 rounded-2xl border border-stone-800 px-4">
-      <h2 class="text-3xl md:text-4xl font-extrabold text-amber-400 mb-2">Churrasco Completo & Eventos no Rio de Janeiro</h2>
-      <p class="text-stone-400 max-w-2xl mx-auto mb-6">Qualidade impecável, estrutura completa e sabor inesquecível para o seu evento.</p>
-      
-      <!-- Grid de Mídias (Fotos e Vídeos dinâmicos) -->
-      <div id="dynamic-media-grid" class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto">
-        <div class="bg-stone-800 h-48 rounded-lg overflow-hidden border border-amber-500/20 relative">
-          <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80" alt="Churrasco" class="w-full h-full object-cover">
-        </div>
-        <div class="bg-stone-800 h-48 rounded-lg overflow-hidden border border-amber-500/20 relative">
-          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80" alt="Buffet" class="w-full h-full object-cover">
-        </div>
-        <div class="bg-stone-800 h-48 rounded-lg overflow-hidden border border-amber-500/20 relative flex items-center justify-center bg-stone-900 text-amber-400">
-          <div class="text-center p-2">
-            <i class="fa-solid fa-video text-3xl mb-1"></i>
-            <p class="text-xs text-stone-300">Vídeo do Evento / Destaque</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Sistema de Abas de Cardápio -->
-    <section class="space-y-6">
-      <div class="flex border-b border-stone-800 overflow-x-auto">
-        <button onclick="switchTab('churrasco')" id="tab-churrasco" class="px-6 py-3 font-bold border-b-2 border-amber-500 text-amber-400 whitespace-nowrap">Buffet de Churrasco</button>
-        <button onclick="switchTab('coffeebreak')" id="tab-coffeebreak" class="px-6 py-3 font-bold text-stone-400 hover:text-amber-400 whitespace-nowrap">Coffee Break</button>
-      </div>
-
-      <!-- Cardápio Churrasco -->
-      <div id="content-churrasco" class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-stone-950 p-6 rounded-xl border border-stone-800">
-          <h3 class="text-xl font-bold text-amber-400 mb-4"><i class="fa-solid fa-drumstick-bite mr-2"></i>Proteínas & Carnes</h3>
-          <ul class="space-y-2 text-stone-300 text-sm">
-            <li>• Alcatra nobre, Picanha e Maminha</li>
-            <li>• Fraldinha, Contrafilé e Costela Gaúcha</li>
-            <li>• Costelinha Suína ao Barbecue, Drumet e Tulipa</li>
-            <li>• Coração de Frango, Linguiça Tradicional e Salsichão</li>
-            <li>• Queijo Coalho Grelhado</li>
-          </ul>
-        </div>
-        <div class="bg-stone-950 p-6 rounded-xl border border-stone-800">
-          <h3 class="text-xl font-bold text-amber-400 mb-4"><i class="fa-solid fa-bowl-rice mr-2"></i>Guarnições & Acompanhamentos</h3>
-          <ul class="space-y-2 text-stone-300 text-sm">
-            <li>• Arroz Branco e Feijão Tropeiro / Amigo</li>
-            <li>• Farofa da Casa e Salpicão de Frango</li>
-            <li>• Macarronese Cremosa e Tabule Fresco</li>
-            <li>• Salada César e Salada de Feijão-Fradinho</li>
-            <li>• Vinagrete, Batata Calabresa e Batata Frita</li>
-          </ul>
-        </div>
-      </div>
-
-      <!-- Cardápio Coffee Break -->
-      <div id="content-coffeebreak" class="hidden grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div class="bg-stone-950 p-6 rounded-xl border border-stone-800">
-          <h3 class="text-xl font-bold text-amber-400 mb-4"><i class="fa-solid fa-bread-slice mr-2"></i>Pães & Salgados</h3>
-          <ul class="space-y-2 text-stone-300 text-sm">
-            <li>• Pão a metro recheado e Sanduíches artesanais</li>
-            <li>• Pão francês fresco e Salgados assados de forno</li>
-            <li>• Pão de queijo quentinho e Quiches variadas</li>
-            <li>• Mini cachorro-quente</li>
-          </ul>
-        </div>
-        <div class="bg-stone-950 p-6 rounded-xl border border-stone-800">
-          <h3 class="text-xl font-bold text-amber-400 mb-4"><i class="fa-solid fa-mug-hot mr-2"></i>Frios, Doces & Frutas</h3>
-          <ul class="space-y-2 text-stone-300 text-sm">
-            <li>• Tábua de frios selecionados, Manteiga e Geleias</li>
-            <li>• Bolos caseiros e Biscoitos finos amanteigados</li>
-            <li>• Salada de frutas frescas da estação</li>
-          </ul>
-        </div>
-      </div>
-    </section>
-
-    <!-- Simulador de Orçamento Rápido para Clientes -->
-    <section class="bg-stone-950 p-6 rounded-xl border border-stone-800">
-      <h3 class="text-xl font-bold text-amber-400 mb-4"><i class="fa-solid fa-calculator mr-2"></i>Simulador Rápido de Orçamento</h3>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-        <div>
-          <label class="block text-sm text-stone-400 mb-1">Número de Convidados:</label>
-          <input type="number" id="calc-guests" value="35" min="10" class="w-full p-2.5 bg-stone-900 border border-stone-700 rounded text-white" oninput="calculateBudget()">
-        </div>
-        <div>
-          <label class="block text-sm text-stone-400 mb-1">Valor por Pessoa (R$):</label>
-          <input type="number" id="calc-price" value="88" class="w-full p-2.5 bg-stone-900 border border-stone-700 rounded text-white" oninput="calculateBudget()">
-        </div>
-        <div class="bg-stone-900 p-2.5 rounded border border-amber-500/30 text-center">
-          <span class="text-xs text-stone-400 block">Valor Total Estimado:</span>
-          <span id="calc-total" class="text-xl font-bold text-amber-400">R$ 3.344,00</span>
-        </div>
-      </div>
-      <div class="mt-4 text-center">
-        <a id="whatsapp-link" href="https://wa.me/5521971876482?text=Olá,%20gostaria%20de%20fechar%20um%20orçamento%20para%20meu%20evento!" target="_blank" class="inline-block bg-green-600 hover:bg-green-500 text-white font-bold px-6 py-3 rounded-lg transition">
-          <i class="fa-brands fa-whatsapp mr-2 text-lg"></i>Falar no WhatsApp e Fechar Contrato
-        </a>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Modal Dashboard Admin Interativo -->
-  <div id="admin-modal" class="fixed inset-0 bg-black/80 hidden items-center justify-center p-4 z-50">
-    <div class="bg-stone-950 border border-amber-500/40 rounded-xl p-6 max-w-3xl w-full max-h-[90vh] overflow-y-auto">
-      
-      <!-- Tela de Login -->
-      <div id="login-step">
-        <h3 class="text-xl font-bold text-amber-400 mb-4">Acesso Administrativo</h3>
-        <input type="password" id="admin-pass" placeholder="Digite a senha (padrão: 1234)" class="w-full p-3 rounded bg-stone-900 border border-stone-700 text-white mb-4">
-        <div class="flex justify-end space-x-2">
-          <button onclick="toggleAdminModal()" class="px-4 py-2 bg-stone-800 text-stone-300 rounded">Cancelar</button>
-          <button onclick="verifyAdmin()" class="px-4 py-2 bg-amber-500 text-stone-950 font-bold rounded">Entrar</button>
-        </div>
-      </div>
-
-      <!-- Dashboard Interativo do Admin -->
-      <div id="admin-panel" class="hidden space-y-6">
-        <div class="flex justify-between items-center border-b border-stone-800 pb-3">
-          <h3 class="text-xl font-bold text-amber-400"><i class="fa-solid fa-gauge-high mr-2"></i>Dashboard Administrativo</h3>
-          <button onclick="toggleAdminModal()" class="text-stone-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
-        </div>
-
-        <!-- Abas do Dashboard -->
-        <div class="flex border-b border-stone-800 space-x-4">
-          <button onclick="switchAdminTab('contracts')" id="adm-tab-contracts" class="pb-2 font-bold border-b-2 border-amber-500 text-amber-400 text-sm"><i class="fa-solid fa-file-contract mr-1"></i> Gerador de Contrato</button>
-          <button onclick="switchAdminTab('media')" id="adm-tab-media" class="pb-2 font-bold text-stone-400 hover:text-amber-400 text-sm"><i class="fa-solid fa-photo-film mr-1"></i> Gestão de Mídias (Fotos/Vídeos)</button>
-        </div>
-
-        <!-- Conteúdo Aba 1: Gerador de Contrato -->
-        <div id="adm-content-contracts" class="space-y-4">
-          <div class="bg-stone-900 p-4 rounded-lg border border-stone-800 space-y-3">
-            <h4 class="font-bold text-amber-400 text-sm">Criar Contrato Oficial Personalizado</h4>
+    <!-- TOP ANNOUNCEMENT / ADMIN TOGGLE BAR -->
+    <header class="bg-black/90 border-b border-brand-gold/30 text-xs py-2.5 px-4 sticky top-0 z-50 backdrop-blur-md">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3 text-gray-300">
+                <span class="inline-flex items-center text-brand-amber font-semibold">
+                    <i class="fa-brands fa-whatsapp text-green-400 mr-1.5 text-sm"></i>
+                    <span id="header-phone-display">(21) 97187-6482</span>
+                </span>
+                <span class="hidden md:inline text-gray-500">|</span>
+                <span class="hidden md:inline text-gray-400"><i class="fa-brands fa-instagram text-pink-400 mr-1"></i> <span id="header-insta-display">@BUFFET_EXPLOSÃO_DE_SABORES</span></span>
+            </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
-              <div>
-                <label class="block text-stone-400 mb-1">Nome do Contratante:</label>
-                <input type="text" id="c-name" placeholder="Ex: Marilena Mattos Andrade" class="w-full p-2 bg-stone-950 border border-stone-700 rounded text-white">
-              </div>
-              <div>
-                <label class="block text-stone-400 mb-1">CPF do Contratante:</label>
-                <input type="text" id="c-doc" placeholder="Ex: 723.857.667-87" class="w-full p-2 bg-stone-950 border border-stone-700 rounded text-white">
-              </div>
-              <div>
-                <label class="block text-stone-400 mb-1">Data e Hora do Evento:</label>
-                <input type="text" id="c-date" placeholder="Ex: 08/11/2026 às 13:00" class="w-full p-2 bg-stone-950 border border-stone-700 rounded text-white">
-              </div>
-              <div>
-                <label class="block text-stone-400 mb-1">Nº de Convidados:</label>
-                <input type="number" id="c-guests" value="35" class="w-full p-2 bg-stone-950 border border-stone-700 rounded text-white" oninput="updateContractValue()">
-              </div>
-              <div>
-                <label class="block text-stone-400 mb-1">Valor Total (R$):</label>
-                <input type="text" id="c-val" value="3.344,00" class="w-full p-2 bg-stone-950 border border-stone-700 rounded text-white">
-              </div>
-              <div>
-                <label class="block text-stone-400 mb-1">Assinatura Digital do Cliente (Nome/Digitação):</label>
-                <input type="text" id="c-sign" placeholder="Nome completo para assinatura" class="w-full p-2 bg-stone-950 border border-stone-700 rounded text-white">
-              </div>
+            <div class="flex items-center space-x-3">
+                <button onclick="scrollToCalculator()" class="text-xs bg-brand-amber/10 hover:bg-brand-amber/20 text-brand-amber border border-brand-amber/40 px-3 py-1 rounded-full transition-all">
+                    <i class="fa-solid fa-calculator mr-1"></i> Simular Evento
+                </button>
+                <button onclick="toggleAdminModal()" class="text-xs bg-gray-800 hover:bg-gray-700 text-gray-200 border border-gray-600 px-3 py-1 rounded-full flex items-center transition-all">
+                    <i class="fa-solid fa-lock mr-1.5 text-brand-gold"></i> 
+                    <span>Painel Admin</span>
+                </button>
             </div>
+        </div>
+    </header>
+
+    <!-- HERO / HEADER SECTION -->
+    <section class="relative bg-gradient-to-b from-black via-brand-darkPaper to-brand-charcoal pt-12 pb-16 px-4 border-b border-gray-800">
+        <div class="max-w-4xl mx-auto text-center">
+            <div class="inline-block p-2 px-4 rounded-full bg-brand-gold/10 border border-brand-gold/30 text-brand-amber text-xs font-semibold tracking-widest uppercase mb-4">
+                Buffet Completo & Eventos Corporativos
+            </div>
+            <h1 class="font-serif text-4xl sm:text-6xl font-bold tracking-tight text-white mb-3">
+                EXPLOSÃO <span class="gradient-gold-text">SABORES</span>
+            </h1>
+            <p class="text-gray-400 text-sm sm:text-base max-w-2xl mx-auto mb-8 font-light">
+                A experiência gastronômica perfeita para o seu evento social ou corporativo. Churrasco completo com cortes nobres e Coffee Break de alto padrão.
+            </p>
+
+            <!-- NAVIGATION TABS -->
+            <div class="flex justify-center space-x-2 sm:space-x-4 max-w-md mx-auto bg-gray-900/90 p-1.5 rounded-2xl border border-gray-800 shadow-xl">
+                <button id="tab-churrasco" onclick="switchTab('churrasco')" class="flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-200 bg-brand-gold text-black font-semibold shadow-lg">
+                    <i class="fa-solid fa-fire mr-1.5"></i> Buffet de Churrasco
+                </button>
+                <button id="tab-coffeebreak" onclick="switchTab('coffeebreak')" class="flex-1 py-3 px-4 rounded-xl text-sm font-medium transition-all duration-200 text-gray-400 hover:text-white">
+                    <i class="fa-solid fa-mug-hot mr-1.5"></i> Coffee Break
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- MAIN CONTENT AREA -->
+    <main class="max-w-6xl mx-auto px-4 py-10 flex-grow w-full space-y-12">
+
+        <!-- TAB 1: BUFFET DE CHURRASCO -->
+        <div id="content-churrasco" class="space-y-12">
             <div>
-              <label class="block text-stone-400 mb-1">Endereço do Evento:</label>
-              <input type="text" id="c-address" placeholder="Ex: Rua Soldado Eugênio da Silva, 19, Taquara" class="w-full p-2 bg-stone-950 border border-stone-700 rounded text-white text-sm">
+                <div class="text-center mb-8">
+                    <h2 class="font-serif text-2xl sm:text-3xl font-bold text-white mb-2">Opções de Pacote (por pessoa)</h2>
+                    <p class="text-gray-400 text-xs sm:text-sm">Escolha o pacote ideal para os convidados do seu evento</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <!-- Pacote 1 -->
+                    <div class="bg-brand-darkPaper border border-gray-800 rounded-2xl p-6 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-gray-800 text-gray-300 text-xs font-semibold px-3 py-1 rounded-full uppercase">Sem Bebidas</span>
+                            <h3 class="font-serif text-xl font-bold text-white mt-4 mb-1">Cardápio Completo</h3>
+                            <p class="text-gray-400 text-xs mb-6">Variedade de entradas, carnes nobres, guarnições e sobremesa.</p>
+                            <div class="mb-6">
+                                <span class="text-xs text-gray-400 block">Investimento individual:</span>
+                                <div class="flex items-baseline">
+                                    <span class="text-sm font-semibold text-brand-amber mr-1">R$</span>
+                                    <span class="text-4xl font-bold text-white price-field" data-key="priceChurrascoSemBebida">88,00</span>
+                                    <span class="text-xs text-gray-400 ml-1">/ pessoa</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="openBookingWhatsApp('Buffet de Churrasco - Sem Bebidas', getPrice('priceChurrascoSemBebida'))" class="w-full py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold transition-colors flex items-center justify-center space-x-2">
+                            <i class="fa-brands fa-whatsapp text-green-400 text-base"></i>
+                            <span>Solicitar Reserva</span>
+                        </button>
+                    </div>
+
+                    <!-- Pacote 2 -->
+                    <div class="bg-brand-darkPaper border border-brand-amber/50 rounded-2xl p-6 flex flex-col justify-between shadow-lg relative">
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-brand-amber text-black text-[10px] font-bold uppercase tracking-widest px-3 py-0.5 rounded-full">
+                            Mais Popular
+                        </div>
+                        <div>
+                            <span class="bg-brand-amber/20 text-brand-amber text-xs font-semibold px-3 py-1 rounded-full uppercase">Sem Álcool</span>
+                            <h3 class="font-serif text-xl font-bold text-white mt-4 mb-1">Com Bebidas Leves</h3>
+                            <p class="text-gray-400 text-xs mb-6">Cardápio completo + Refrigerantes variados, sucos e água mineral.</p>
+                            <div class="mb-6">
+                                <span class="text-xs text-gray-400 block">Investimento individual:</span>
+                                <div class="flex items-baseline">
+                                    <span class="text-sm font-semibold text-brand-amber mr-1">R$</span>
+                                    <span class="text-4xl font-bold text-white price-field" data-key="priceChurrascoComBebida">98,00</span>
+                                    <span class="text-xs text-gray-400 ml-1">/ pessoa</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="openBookingWhatsApp('Buffet de Churrasco - Com Bebidas Não Alcoólicas', getPrice('priceChurrascoComBebida'))" class="w-full py-3 bg-brand-amber hover:bg-yellow-500 text-black rounded-xl text-sm font-bold transition-colors flex items-center justify-center space-x-2">
+                            <i class="fa-brands fa-whatsapp text-black text-base"></i>
+                            <span>Solicitar Reserva</span>
+                        </button>
+                    </div>
+
+                    <!-- Pacote 3 -->
+                    <div class="bg-brand-darkPaper border border-gray-800 rounded-2xl p-6 flex flex-col justify-between">
+                        <div>
+                            <span class="bg-purple-900/40 text-purple-300 text-xs font-semibold px-3 py-1 rounded-full uppercase">Experiência VIP</span>
+                            <h3 class="font-serif text-xl font-bold text-white mt-4 mb-1">Cerveja & Open Bar</h3>
+                            <p class="text-gray-400 text-xs mb-6">Cardápio completo + Cervejas (Antarctica, Brahma ou Império) + Caipirinha & Caipivodka.</p>
+                            <div class="mb-6">
+                                <span class="text-xs text-gray-400 block">Investimento individual:</span>
+                                <div class="flex items-baseline">
+                                    <span class="text-sm font-semibold text-brand-amber mr-1">R$</span>
+                                    <span class="text-4xl font-bold text-white price-field" data-key="priceChurrascoComCerveja">140,00</span>
+                                    <span class="text-xs text-gray-400 ml-1">/ pessoa</span>
+                                </div>
+                            </div>
+                        </div>
+                        <button onclick="openBookingWhatsApp('Buffet de Churrasco - Completo com Cerveja e Drinks', getPrice('priceChurrascoComCerveja'))" class="w-full py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl text-sm font-semibold transition-colors flex items-center justify-center space-x-2">
+                            <i class="fa-brands fa-whatsapp text-green-400 text-base"></i>
+                            <span>Solicitar Reserva</span>
+                        </button>
+                    </div>
+                </div>
             </div>
 
-            <button onclick="generateOfficialPDF()" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-stone-950 font-bold rounded flex items-center justify-center transition">
-              <i class="fa-solid fa-file-pdf mr-2 text-lg"></i>Gerar Contrato em PDF com Assinaturas
-            </button>
-          </div>
+            <!-- CHURRASCO CATEGORIES -->
+            <div class="space-y-8">
+                <div class="border-b border-gray-800 pb-4">
+                    <h3 class="font-serif text-2xl font-bold text-white">Cardápio Detalhado do Churrasco</h3>
+                    <p class="text-gray-400 text-xs sm:text-sm">Tudo preparado na hora com matéria-prima de primeira qualidade.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6" id="churrasco-categories-container"></div>
+            </div>
         </div>
 
-        <!-- Conteúdo Aba 2: Gestão de Mídias -->
-        <div id="adm-content-media" class="hidden space-y-4">
-          <div class="bg-stone-900 p-4 rounded-lg border border-stone-800 space-y-3 text-sm">
-            <h4 class="font-bold text-amber-400">Atualizar Links de Imagens e Vídeo</h4>
-            <p class="text-stone-400 text-xs">Insira os links diretos de imagens (URL) para atualizar a galeria do site instantaneamente.</p>
+        <!-- TAB 2: COFFEE BREAK -->
+        <div id="content-coffeebreak" class="hidden space-y-12">
+            <div class="bg-gradient-to-r from-amber-950/40 via-brand-darkPaper to-gray-900 border border-brand-amber/30 rounded-3xl p-6 sm:p-10 flex flex-col md:flex-row justify-between items-center gap-8 shadow-2xl">
+                <div class="space-y-4 max-w-xl text-center md:text-left">
+                    <span class="bg-brand-amber/20 text-brand-amber text-xs font-semibold px-3 py-1 rounded-full uppercase">Eventos Corporativos</span>
+                    <h2 class="font-serif text-3xl sm:text-4xl font-bold text-white">Serviço de Coffee Break Especial</h2>
+                    <p class="text-gray-300 text-sm">Estrutura completa com itens frescos e variados para reuniões e workshops.</p>
+                </div>
+                <div class="bg-black/80 border border-gray-800 rounded-2xl p-6 text-center min-w-[240px]">
+                    <span class="text-xs text-gray-400 block uppercase font-semibold">Valor Por Pessoa</span>
+                    <div class="flex items-baseline justify-center my-2">
+                        <span class="text-lg font-bold text-brand-amber mr-1">R$</span>
+                        <span class="text-5xl font-extrabold text-white price-field" data-key="priceCoffeeBreak">65,00</span>
+                    </div>
+                    <button onclick="openBookingWhatsApp('Coffee Break Corporativo', getPrice('priceCoffeeBreak'))" class="w-full py-3 bg-brand-amber hover:bg-yellow-500 text-black font-bold rounded-xl text-sm transition-all mt-2">
+                        <i class="fa-brands fa-whatsapp mr-2"></i>Reservar Data
+                    </button>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6" id="coffeebreak-categories-container"></div>
+        </div>
+
+        <!-- CALCULATOR SECTION -->
+        <section id="calculator-section" class="bg-gradient-to-b from-gray-900 to-black border border-gray-800 rounded-3xl p-6 sm:p-10 shadow-2xl">
+            <div class="max-w-3xl mx-auto space-y-6">
+                <div class="text-center space-y-2">
+                    <span class="text-xs font-semibold text-brand-amber uppercase tracking-widest bg-brand-amber/10 px-3 py-1 rounded-full border border-brand-amber/20">Simulador Rápido</span>
+                    <h3 class="font-serif text-2xl sm:text-3xl font-bold text-white">Calcule a Estimativa do Seu Evento</h3>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 bg-brand-darkPaper/80 p-6 rounded-2xl border border-gray-800">
+                    <div class="space-y-2">
+                        <label class="text-xs font-semibold text-gray-300 block">1. Selecione o Serviço / Pacote:</label>
+                        <select id="calc-package" onchange="updateCalculator()" class="w-full bg-gray-900 border border-gray-700 text-white rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-brand-amber">
+                            <option value="churrasco_1">Churrasco - Sem Bebidas (R$ 88,00 / pess.)</option>
+                            <option value="churrasco_2" selected>Churrasco - Bebidas Não Alcoólicas (R$ 98,00 / pess.)</option>
+                            <option value="churrasco_3">Churrasco - Cervejas & Open Bar (R$ 140,00 / pess.)</option>
+                            <option value="coffeebreak">Coffee Break Corporativo (R$ 65,00 / pess.)</option>
+                        </select>
+                    </div>
+
+                    <div class="space-y-2">
+                        <div class="flex justify-between items-center">
+                            <label class="text-xs font-semibold text-gray-300">2. Número de Convidados:</label>
+                            <span id="calc-guests-count" class="text-sm font-bold text-brand-amber">50 Pessoas</span>
+                        </div>
+                        <input type="range" id="calc-guests" min="10" max="300" step="1" value="50" oninput="updateCalculator()" class="w-full accent-brand-amber bg-gray-800 rounded-lg cursor-pointer h-2">
+                    </div>
+                </div>
+
+                <div class="bg-gray-950 p-6 rounded-2xl border border-brand-amber/30 flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div>
+                        <span class="text-xs text-gray-400 block">Investimento Total Estimado:</span>
+                        <div class="flex items-baseline">
+                            <span class="text-lg font-bold text-brand-amber mr-1">R$</span>
+                            <span id="calc-total" class="text-3xl sm:text-4xl font-extrabold text-white">4.900,00</span>
+                        </div>
+                    </div>
+                    <button onclick="sendCalculatedWhatsApp()" class="w-full sm:w-auto py-3.5 px-6 bg-green-600 hover:bg-green-500 text-white font-bold rounded-xl text-sm transition-all shadow-lg flex items-center justify-center space-x-2">
+                        <i class="fa-brands fa-whatsapp text-lg"></i>
+                        <span>Enviar Orçamento no WhatsApp</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-black border-t border-gray-800 text-gray-400 py-10 px-4 text-xs mt-16">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+            <div>
+                <h4 class="font-serif text-lg font-bold text-white mb-1">EXPLOSÃO SABORES</h4>
+                <p class="text-gray-500">Buffet Completo & Eventos Corporativos.</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span id="footer-phone-display">(21) 97187-6482</span>
+                <span>|</span>
+                <span id="footer-insta-display">@BUFFET_EXPLOSÃO_DE_SABORES</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL DASHBOARD ADMIN -->
+    <div id="admin-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-brand-darkPaper border border-amber-500/40 rounded-2xl p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
             
-            <div>
-              <label class="block text-stone-400 mb-1">Link Foto 1 (Churrasco):</label>
-              <input type="text" id="media-img1" value="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80" class="w-full p-2 bg-stone-950 border border-stone-700 rounded text-white">
-            </div>
-            <div>
-              <label class="block text-stone-400 mb-1">Link Foto 2 (Buffet):</label>
-              <input type="text" id="media-img2" value="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80" class="w-full p-2 bg-stone-950 border border-stone-700 rounded text-white">
-            </div>
-            <div>
-              <label class="block text-stone-400 mb-1">Link Vídeo ou Instagram Embed:</label>
-              <input type="text" id="media-video" placeholder="Cole o link do vídeo" class="w-full p-2 bg-stone-950 border border-stone-700 rounded text-white">
+            <!-- Login -->
+            <div id="admin-login-screen">
+                <h3 class="text-xl font-bold text-amber-400 mb-4"><i class="fa-solid fa-lock mr-2"></i>Acesso Administrativo</h3>
+                <input type="password" id="admin-pass" placeholder="Digite a senha (padrão: 1234)" class="w-full p-3 rounded bg-gray-900 border border-gray-700 text-white mb-4 text-sm">
+                <div class="flex justify-end space-x-2">
+                    <button onclick="toggleAdminModal()" class="px-4 py-2 bg-gray-800 text-gray-300 rounded text-xs">Cancelar</button>
+                    <button onclick="verifyAdmin()" class="px-4 py-2 bg-amber-500 text-black font-bold rounded text-xs">Entrar</button>
+                </div>
             </div>
 
-            <button onclick="updateMediaGallery()" class="w-full py-2 bg-amber-600 hover:bg-amber-500 text-stone-950 font-bold rounded transition">
-              Atualizar Galeria no Site
-            </button>
-          </div>
+            <!-- Dashboard Completo -->
+            <div id="admin-dashboard" class="hidden space-y-6">
+                <div class="flex justify-between items-center border-b border-gray-800 pb-3">
+                    <h3 class="text-xl font-bold text-amber-400"><i class="fa-solid fa-gauge-high mr-2"></i>Dashboard Administrativo</h3>
+                    <button onclick="toggleAdminModal()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-xmark text-xl"></i></button>
+                </div>
+
+                <!-- Abas do Dashboard -->
+                <div class="flex border-b border-gray-800 space-x-4">
+                    <button onclick="switchAdminTab('contract')" id="adm-tab-contract" class="pb-2 font-bold border-b-2 border-amber-500 text-amber-400 text-sm"><i class="fa-solid fa-file-contract mr-1"></i> Gerar Contrato</button>
+                    <button onclick="switchAdminTab('media')" id="adm-tab-media" class="pb-2 font-bold text-gray-400 hover:text-amber-400 text-sm"><i class="fa-solid fa-photo-film mr-1"></i> Fotos & Vídeos</button>
+                </div>
+
+                <!-- Aba 1: Gerar Contrato -->
+                <div id="adm-content-contract" class="space-y-4 text-sm">
+                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 space-y-3">
+                        <h4 class="font-bold text-amber-400">Preencher Dados do Contrato Oficial</h4>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-gray-400 mb-1 text-xs">Nome do Contratante:</label>
+                                <input type="text" id="c-name" placeholder="Ex: Marilena Mattos Andrade" class="w-full p-2 bg-brand-charcoal border border-gray-700 rounded text-white text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 mb-1 text-xs">CPF do Contratante:</label>
+                                <input type="text" id="c-doc" placeholder="Ex: 723.857.667-87" class="w-full p-2 bg-brand-charcoal border border-gray-700 rounded text-white text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 mb-1 text-xs">Data e Hora do Evento:</label>
+                                <input type="text" id="c-date" placeholder="Ex: 08/11/2026 às 13:00" class="w-full p-2 bg-brand-charcoal border border-gray-700 rounded text-white text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 mb-1 text-xs">Número de Convidados:</label>
+                                <input type="number" id="c-guests" value="35" oninput="autoCalculateContract()" class="w-full p-2 bg-brand-charcoal border border-gray-700 rounded text-white text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 mb-1 text-xs">Valor Total (R$):</label>
+                                <input type="text" id="c-val" value="3.344,00" class="w-full p-2 bg-brand-charcoal border border-gray-700 rounded text-white text-sm">
+                            </div>
+                            <div>
+                                <label class="block text-gray-400 mb-1 text-xs">Assinatura Digital do Cliente (Nome):</label>
+                                <input type="text" id="c-sign" placeholder="Nome completo para assinatura" class="w-full p-2 bg-brand-charcoal border border-gray-700 rounded text-white text-sm">
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 mb-1 text-xs">Endereço do Evento:</label>
+                            <input type="text" id="c-address" placeholder="Ex: Rua Soldado Eugênio da Silva, 19, Taquara" class="w-full p-2 bg-brand-charcoal border border-gray-700 rounded text-white text-sm">
+                        </div>
+
+                        <button onclick="generateOfficialPDF()" class="w-full py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded-xl transition flex items-center justify-center text-sm shadow-lg">
+                            <i class="fa-solid fa-file-pdf mr-2 text-base"></i>Gerar Contrato Oficial em PDF (com Assinaturas)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Aba 2: Gestão de Mídias (Fotos/Vídeos) -->
+                <div id="adm-content-media" class="hidden space-y-4 text-sm">
+                    <div class="bg-gray-900 p-4 rounded-xl border border-gray-800 space-y-3">
+                        <h4 class="font-bold text-amber-400">Gerir Fotos e Vídeos da Página</h4>
+                        <p class="text-xs text-gray-400">Insira os links de imagem ou vídeo (YouTube/Instagram) para exibir no topo do site.</p>
+                        
+                        <div>
+                            <label class="block text-gray-400 mb-1 text-xs">Link da Foto 1:</label>
+                            <input type="text" id="media-img1" class="w-full p-2 bg-brand-charcoal border border-gray-700 rounded text-white text-sm" value="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80">
+                        </div>
+                        <div>
+                            <label class="block text-gray-400 mb-1 text-xs">Link da Foto 2:</label>
+                            <input type="text" id="media-img2" class="w-full p-2 bg-brand-charcoal border border-gray-700 rounded text-white text-sm" value="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80">
+                        </div>
+
+                        <button onclick="alert('Mídias atualizadas com sucesso!')" class="w-full py-2.5 bg-brand-gold text-black font-bold rounded-xl text-xs">Guardar Alterações</button>
+                    </div>
+                </div>
+
+            </div>
         </div>
-
-      </div>
-
     </div>
-  </div>
 
-  <!-- Template Oculto Exato do Contrato Oficial para PDF -->
-  <div class="hidden">
-    <div id="pdf-template" style="padding: 20px; font-family: Arial, sans-serif; color: #000; background: #fff; font-size: 11px; line-height: 1.4;">
-      
-      <div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 10px; margin-bottom: 15px;">
-        <h2 style="font-size: 14px; font-weight: bold; margin: 0;">EXPLOSÃO SABORES BUFFET</h2>
-        <h3 style="font-size: 12px; margin: 5px 0; text-decoration: underline;">CONTRATO DE PRESTAÇÃO DE SERVIÇOS</h3>
-      </div>
-
-      <p style="text-align: justify; margin-bottom: 8px;">
-        Por este instrumento particular, de um lado como <strong>CONTRATANTE</strong> o(a) senhor(a) <span id="out-name" style="font-weight: bold;">____________________</span>, portador(a) do CPF <span id="out-doc" style="font-weight: bold;">____________________</span> e residente em <span id="out-address" style="font-weight: bold;">____________________</span>.
-      </p>
-      
-      <p style="text-align: justify; margin-bottom: 8px;">
-        De outro lado como <strong>CONTRATADO</strong> <strong>EXPLOSÃO SABORES BUFFET</strong>, com sede na cidade de Rio de Janeiro, inscrita no CNPJ sob o nº 69.594.849/0001-37, ora representada por seu sócio Marlon José Vicente Gonçalves, têm entre si justo e contratado a prestação de serviços de buffet, mediante as condições a seguir:
-      </p>
-
-      <p style="font-weight: bold; margin-top: 10px; margin-bottom: 3px;">CLÁUSULA 1ª</p>
-      <p style="text-align: justify; margin-bottom: 8px;">
-        O CONTRATADO se compromete a prestar os serviços de buffet em uma festa a ser realizada no dia <span id="out-date" style="font-weight: bold;">08/11/2026 às 13:00</span>, no endereço residencial do contratante com duração de 5 (cinco) horas.
-      </p>
-
-      <p style="font-weight: bold; margin-top: 10px; margin-bottom: 3px;">CLÁUSULA 2ª</p>
-      <p style="text-align: justify; margin-bottom: 4px;">
-        <strong>2.1.</strong> Pela prestação dos serviços de buffet objeto deste instrumento, o CONTRATANTE pagará ao CONTRATADO o valor total e fechado de R$ <span id="out-val" style="font-weight: bold;">3.344,00</span>.
-      </p>
-      <p style="text-align: justify; margin-bottom: 4px;">
-        <strong>Valor e Condições de Pagamento:</strong> Sinal / Reserva de data (50%): depositado antecipadamente. Saldo remanescente (50%): a ser quitado em até 24 horas após a realização do evento.
-      </p>
-      <p style="text-align: justify; margin-bottom: 8px;">
-        <strong>2.2.</strong> O valor estipulado baseia-se na capacidade de atendimento para até <span id="out-guests" style="font-weight: bold;">35</span> pessoas. Com a assinatura deste contrato, o CONTRATANTE manifesta expressa concordância com os valores e condições comerciais.
-      </p>
-
-      <p style="font-weight: bold; margin-top: 10px; margin-bottom: 3px;">CLÁUSULA 3ª a 6ª</p>
-      <p style="text-align: justify; margin-bottom: 8px;">
-        <strong>3ª:</strong> Atraso no pagamento integral após 24h do evento incorre em multa de 10%[cite: 6].<br>
-        <strong>4ª & 5ª:</strong> Execução com higiene, louças e materiais fornecidos pelo CONTRATADO[cite: 6].<br>
-        <strong>6ª:</strong> Bebidas alcoólicas: buffet não se responsabiliza pelo fornecimento[cite: 7].
-      </p>
-
-      <p style="font-weight: bold; margin-top: 10px; margin-bottom: 3px;">CLÁUSULA 7ª a 10ª</p>
-      <p style="text-align: justify; margin-bottom: 8px;">
-        <strong>7ª:</strong> Cancelamento em até 24h implica retenção do sinal e multa de 10%[cite: 6].<br>
-        <strong>8ª & 9ª:</strong> Sobras de alimentos ficam com o buffet; contrato intransferível[cite: 6].<br>
-        <strong>10ª:</strong> Responsabilidade por danos ou quebras de louças e equipamentos (taxa mín. R$ 5,00 por item)[cite: 6].
-      </p>
-
-      <p style="font-weight: bold; margin-top: 10px; margin-bottom: 3px;">CLÁUSULA 11ª - DIREITO DE USO DE IMAGEM</p>
-      <p style="text-align: justify; margin-bottom: 10px;">
-        O CONTRATANTE autoriza o uso de imagens/registros em vídeo feitos no evento exclusivamente para divulgação nas redes sociais e site do CONTRATADO, a título gratuito[cite: 7].
-      </p>
-
-      <div style="margin-top: 20px; text-align: center;">
-        <p>Rio de Janeiro, 22 de Outubro de 2026[cite: 7].</p>
-        <br>
-        <div style="display: flex; justify-content: space-between; margin-top: 15px;">
-          <div style="width: 45%; border-top: 1px solid #000; padding-top: 5px; font-size: 10px; text-align: center;">
-            <strong>CONTRATANTE (Assinatura Digital):</strong><br>
-            <span id="out-sign" style="font-family: 'Brush Script MT', cursive; font-size: 14px; font-weight: bold;">____________________</span><br>
-            <span id="out-sign-name">____________________</span>
-          </div>
-          <div style="width: 45%; border-top: 1px solid #000; padding-top: 5px; font-size: 10px; text-align: center;">
-            <strong>CONTRATADO:</strong><br>
-            <span style="font-family: 'Brush Script MT', cursive; font-size: 14px; font-weight: bold;">Marlon José Vicente Gonçalves</span><br>
-            EXPLOSÃO SABORES BUFFET<br>
-            Conta: 0002818-5 | Agência: 1669-1[cite: 7]
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <script>
-    function switchTab(tab) {
-      document.getElementById('content-churrasco').classList.toggle('hidden', tab !== 'churrasco');
-      document.getElementById('content-coffeebreak').classList.toggle('hidden', tab !== 'coffeebreak');
-      
-      document.getElementById('tab-churrasco').className = tab === 'churrasco' ? 'px-6 py-3 font-bold border-b-2 border-amber-500 text-amber-400 whitespace-nowrap' : 'px-6 py-3 font-bold text-stone-400 hover:text-amber-400 whitespace-nowrap';
-      document.getElementById('tab-coffeebreak').className = tab === 'coffeebreak' ? 'px-6 py-3 font-bold border-b-2 border-amber-500 text-amber-400 whitespace-nowrap' : 'px-6 py-3 font-bold text-stone-400 hover:text-amber-400 whitespace-nowrap';
-    }
-
-    function switchAdminTab(tab) {
-      document.getElementById('adm-content-contracts').classList.toggle('hidden', tab !== 'contracts');
-      document.getElementById('adm-content-media').classList.toggle('hidden', tab !== 'media');
-
-      document.getElementById('adm-tab-contracts').className = tab === 'contracts' ? 'pb-2 font-bold border-b-2 border-amber-500 text-amber-400 text-sm' : 'pb-2 font-bold text-stone-400 hover:text-amber-400 text-sm';
-      document.getElementById('adm-tab-media').className = tab === 'media' ? 'pb-2 font-bold border-b-2 border-amber-500 text-amber-400 text-sm' : 'pb-2 font-bold text-stone-400 hover:text-amber-400 text-sm';
-    }
-
-    function calculateBudget() {
-      const guests = parseFloat(document.getElementById('calc-guests').value) || 0;
-      const price = parseFloat(document.getElementById('calc-price').value) || 0;
-      const total = guests * price;
-      document.getElementById('calc-total').innerText = 'R$ ' + total.toLocaleString('pt-BR', {minimumFractionDigits: 2});
-      
-      const msg = encodeURIComponent(`Olá! Gostaria de fechar um orçamento para ${guests} convidados, totalizando R$ ${total.toFixed(2)}.`);
-      document.getElementById('whatsapp-link').href = `https://wa.me/5521971876482?text=${msg}`;
-    }
-
-    function updateContractValue() {
-      const guests = parseInt(document.getElementById('c-guests').value) || 35;
-      const total = guests * 88;
-      document.getElementById('c-val').value = total.toLocaleString('pt-BR', {minimumFractionDigits: 2});
-    }
-
-    function toggleAdminModal() {
-      const modal = document.getElementById('admin-modal');
-      modal.classList.toggle('hidden');
-      modal.classList.toggle('flex');
-    }
-
-    function verifyAdmin() {
-      const pass = document.getElementById('admin-pass').value;
-      if (pass === '1234') {
-        document.getElementById('login-step').classList.add('hidden');
-        document.getElementById('admin-panel').classList.remove('hidden');
-      } else {
-        alert('Senha incorreta!');
-      }
-    }
-
-    function updateMediaGallery() {
-      const img1 = document.getElementById('media-img1').value;
-      const img2 = document.getElementById('media-img2').value;
-      
-      const grid = document.getElementById('dynamic-media-grid');
-      grid.children[0].innerHTML = `<img src="${img1}" class="w-full h-full object-cover">`;
-      grid.children[1].innerHTML = `<img src="${img2}" class="w-full h-full object-cover">`;
-      alert('Galeria de mídias atualizada com sucesso no site!');
-      toggleAdminModal();
-    }
-
-    function generateOfficialPDF() {
-      const name = document.getElementById('c-name').value;
-      const doc = document.getElementById('c-doc').value;
-      const date = document.getElementById('c-date').value;
-      const guests = document.getElementById('c-guests').value;
-      const val = document.getElementById('c-val').value;
-      const address = document.getElementById('c-address').value;
-      const sign = document.getElementById('c-sign').value || name;
-
-      if(!name || !val) {
-        alert('Preencha ao menos o nome do contratante e o valor!');
-        return;
-      }
-
-      document.getElementById('out-name').innerText = name;
-      document.getElementById('out-doc').innerText = doc || '___________';
-      document.getElementById('out-date').innerText = date || 'Data a definir';
-      document.getElementById('out-guests').innerText = guests;
-      document.getElementById('out-val').innerText = val;
-      document.getElementById('out-address').innerText = address || 'Endereço a definir';
-      document.getElementById('out-sign').innerText = sign;
-      document.getElementById('out-sign-name').innerText = name;
-
-      const element = document.getElementById('pdf-template');
-      element.classList.remove('hidden');
-      
-      const opt = {
-        margin:       10,
-        filename:     `Contrato_${name.replace(/\s+/g, '_')}.pdf`,
-        image:        { type: 'jpeg', quality: 0.98 },
-        html2canvas:  { scale: 2 },
-        jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
-      };
-
-      html2pdf().set(opt).from(element).save().then(() => {
-        element.classList.add('hidden');
-      });
-    }
-  </script>
-</body>
-</html>
+    <!-- TEMPLATE OCULTO PARA GERAR O PDF DO CONTRATO OFICIAL -->
